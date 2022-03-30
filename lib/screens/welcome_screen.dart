@@ -31,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const SignInScreen(providerConfigs: [
-                GoogleProviderConfiguration(clientId: "project-876159011335"),
+                GoogleProviderConfiguration(clientId: "876159011335-cnrdhstg0ajo74ti7e5db0hrq17ka07h.apps.googleusercontent.com"),
                 PhoneProviderConfiguration(),
               ]),
             ),
