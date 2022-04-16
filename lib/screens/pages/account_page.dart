@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
+import 'package:mela/screens/account_product_screen.dart';
 import 'package:mela/screens/distributorScreen.dart';
-import 'package:mela/screens/pages/event_page.dart';
 import 'package:mela/screens/share/share_finish_screen.dart';
-import 'package:mela/screens/share/share_screen.dart';
 import 'package:mela/screens/withdraw/withdraw_screen.dart';
 
 class AccountPage extends StatefulWidget {
@@ -186,7 +186,7 @@ class BalanceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.20,
+      height: MediaQuery.of(context).size.height * 0.22,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       //margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -197,39 +197,66 @@ class BalanceWidget extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                "3 ",
-                style: TextStyle(
-                  fontSize: 56,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.blue[900],
+      child: BlocBuilder<AccountBloc, AccountState>(
+        builder: (context, state) {
+          if (state is AccountLoadSuccess) {
+            var products = state.products;
+
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      "${products.length}",
+                      style: TextStyle(
+                        fontSize: 56,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue[900],
+                      ),
+                    ),
+                    SvgPicture.asset("images/wine.svg", height: 52),
+                    const Text(
+                      " Bouteilles",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SvgPicture.asset("images/beer.svg", height: 52),
-              const Text(
-                " Doppels",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => const AccountProductScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Voir plus',
+                      style: TextStyle(color: Colors.blue[600]),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Text(
-              'Voir plus',
-              style: TextStyle(color: Colors.blue[600]),
-            ),
-          ),
-        ],
+              ],
+            );
+          }
+          if (state is AccountLoadFailure) {
+            return const Center(
+              child: Text("Error"),
+            );
+          }
+
+          return const Center(
+            child: Text("Loading ..."),
+          );
+        },
       ),
     );
   }

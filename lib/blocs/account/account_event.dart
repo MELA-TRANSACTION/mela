@@ -10,10 +10,29 @@ abstract class AccountEvent extends Equatable {
 class LoadAccountEvent extends AccountEvent {}
 
 class UpdateAccountEvent extends AccountEvent {
-  final Account account;
+  final List<Product> products;
 
-  const UpdateAccountEvent(this.account);
+  const UpdateAccountEvent(this.products);
 
   @override
-  List<Object> get props => [account];
+  List<Object> get props => [products];
+}
+
+class ShareProductEvent extends AccountEvent {
+  final List<Product> products;
+  final String destinateur;
+  const ShareProductEvent({
+    required this.products,
+    required this.destinateur,
+  });
+}
+
+class WithdrawProductEvent extends AccountEvent {
+  final List<Product> products;
+  final String destinateur;
+
+  const WithdrawProductEvent({
+    required this.products,
+    required this.destinateur,
+  });
 }

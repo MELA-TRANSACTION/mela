@@ -18,6 +18,24 @@ class UpdateAuthState extends AuthEvent {
   List<Object> get props => [user!];
 }
 
-class Login extends AuthEvent {}
+class Login extends AuthEvent {
+  final String phone;
+  final String password;
+
+  const Login(this.phone, this.password);
+
+  @override
+  List<Object> get props => [phone, password];
+}
+
+class Register extends AuthEvent {
+  final String name;
+  final String phone;
+  final String password;
+
+  const Register(this.name, this.phone, this.password);
+  @override
+  List<Object> get props => [name, phone, password];
+}
 
 class Logout extends AuthEvent {}

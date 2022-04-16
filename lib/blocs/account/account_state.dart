@@ -13,9 +13,14 @@ class AccountInitial extends AccountState {
 }
 
 class AccountLoadSuccess extends AccountState {
-  final Account account;
+  final List<Product> products;
 
-  const AccountLoadSuccess({required this.account});
+  const AccountLoadSuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
 }
 
 class AccountLoadFailure extends AccountState {}
+
+class AccountLoadingState extends AccountState {}

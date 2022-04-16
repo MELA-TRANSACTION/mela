@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "876159011335",
-    "project_id": "melako-292ab",
-    "storage_bucket": "melako-292ab.appspot.com"
+    "project_number": "336210507472",
+    "project_id": "mela-business",
+    "storage_bucket": "mela-business.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:876159011335:android:d1a3e7c99c70d6402778a2",
+        "mobilesdk_app_id": "1:336210507472:android:7d26ff5304a39f02c1d0d5",
         "android_client_info": {
           "package_name": "com.innov.mela"
         }
       },
       "oauth_client": [
         {
-          "client_id": "876159011335-cnrdhstg0ajo74ti7e5db0hrq17ka07h.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.innov.mela",
-            "certificate_hash": "dce957508bc555fdc633a825470354ad437f8209"
-          }
-        },
-        {
-          "client_id": "876159011335-30qm4be55hbv9559pbvugmgn7upqqef3.apps.googleusercontent.com",
+          "client_id": "336210507472-ruf488q943e8svpovkca2749findh280.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTPAdi-809ABEwT-Mk9hELRwp7Y5V2oBQ"
+          "current_key": "AIzaSyAH0nEyUUjHjjJsG7_cgM0klBTSr5ZB1kU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "876159011335-30qm4be55hbv9559pbvugmgn7upqqef3.apps.googleusercontent.com",
+              "client_id": "336210507472-ruf488q943e8svpovkca2749findh280.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

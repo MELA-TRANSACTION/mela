@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/screens/withdraw/withdraw_finish.dart';
 
 class WithdrawScreen extends StatefulWidget {
@@ -9,6 +11,7 @@ class WithdrawScreen extends StatefulWidget {
 }
 
 class _WithdrawScreenState extends State<WithdrawScreen> {
+  String distributor = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,11 +28,24 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             height: 40,
           ),
           TextFormField(
+            onChanged: (v) {
+              setState(() {
+                distributor = v;
+              });
+            },
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
               label: const Text("Distributeur"),
+              suffixIcon: TextButton(
+                onPressed: () {
+                  BlocProvider.of<DistributorsBloc>(context).add(
+                    SearchDistributorEvent(distributor),
+                  );
+                },
+                child: const Text("Search"),
+              ),
               prefixIcon: const Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: 10,
@@ -60,7 +76,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const WithDrawFinish(),
+                  builder: (context) =>
+                      WithDrawFinish(distributor: distributor),
                 ),
               );
             },

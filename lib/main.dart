@@ -2,11 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterfire_ui/i10n.dart';
+
+import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
-import 'package:mela/screens/pages/account_page.dart';
+import 'package:mela/blocs/clients/clients_bloc.dart';
+import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/screens/welcome_screen.dart';
+import 'package:mela/screens/pages/account_page.dart';
+
+import 'package:mela/services/account_service.dart';
+import 'package:mela/services/api_service.dart';
 import 'package:mela/services/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,59 +37,110 @@ class MyApp extends StatelessWidget {
         ..add(
           StartAppEvent(),
         ),
-      child: MaterialApp(
-        title: 'Mela app for happy',
-        localizationsDelegates: [
-          // Creates an instance of FirebaseUILocalizationDelegate with overridden labels
-          // FlutterFireUILocalizations.withDefaultOverrides(
-          // const LabelOverrides()),
-
-          // Delegates below take care of built-in flutter widgets
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-
-          // This delegate is required to provide the labels that are not overridden by LabelOverrides
-          FlutterFireUILocalizations.delegate,
-        ],
-        debugShowCheckedModeBanner: false,
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(
-            secondary: const Color(0xff0e2763),
-          ),
-          primaryColor: Colors.white,
-          scaffoldBackgroundColor: Colors.blueGrey[50],
-          appBarTheme: const AppBarTheme(
-            elevation: 0.9,
-            color: Colors.white,
-            iconTheme: IconThemeData(
-              color: Colors.black,
-            ),
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        home: BlocBuilder<AuthBloc, AuthState>(
-          //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
-          builder: (context, state) {
-            if (state is UnAuthenticated) {
-              return const WelcomeScreen();
-            }
-            if (state is AuthSuccess) {
-              //print(state.user);
-              return const AccountPage();
-            }
-
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AccountBloc(accountService: AccountService())
+              ..add(
+                LoadAccountEvent(),
               ),
-            );
-          },
+          ),
+          BlocProvider(
+            create: (context) => DistributorsBloc(ApiService())
+              ..add(
+                LoadDistributorsEvent(),
+              ),
+          ),
+          BlocProvider(create: (context) => ClientsBloc(ApiService())),
+        ],
+        child: MaterialApp(
+          title: 'Mela app for happy',
+          debugShowCheckedModeBanner: false,
+          theme: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              secondary: Colors.amber[800],
+            ),
+            primaryColor: const Color(0xff0e2763),
+            scaffoldBackgroundColor: const Color(0xff0e2763),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.grey,
+                  width: 2,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.grey,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.grey,
+                  width: 2,
+                ),
+              ),
+              hintStyle: const TextStyle(color: Colors.white70),
+              labelStyle: const TextStyle(color: Colors.white),
+              prefixIconColor: Colors.white,
+            ),
+            appBarTheme: const AppBarTheme(
+              elevation: 0.9,
+              color: Colors.white,
+              iconTheme: IconThemeData(
+                color: Colors.black,
+              ),
+              systemOverlayStyle: SystemUiOverlayStyle.light,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            brightness: Brightness.dark,
+          ),
+          home: StreamBuilder<bool?>(
+              stream: Check.checkUser().asStream(),
+              builder: (context, snapshot) {
+                return BlocBuilder<AuthBloc, AuthState>(
+                  //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
+                  builder: (context, state) {
+                    if (state is UnAuthenticated) {
+                      return const WelcomeScreen();
+                    }
+                    if (state is AuthSuccess) {
+                      //print(state.user);
+                      return const AccountPage();
+                    }
+
+                    return const Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                );
+              }),
         ),
       ),
     );
+  }
+}
+
+class Check {
+  static Future<bool?> checkUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    var b = prefs.getBool("isNewUser");
+
+    return b;
+  }
+
+  static setNewCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setBool("isNewUser", true);
   }
 }
