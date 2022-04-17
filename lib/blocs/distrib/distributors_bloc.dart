@@ -21,6 +21,7 @@ class DistributorsBloc extends Bloc<DistributorsEvent, DistributorsState> {
                 (event) => add(UpdateDistributorsEvent(event)),
               );
         } catch (ex) {
+          print(ex);
           emit(DistributorsFailure());
         }
       }

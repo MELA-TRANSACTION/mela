@@ -1,23 +1,26 @@
 import 'package:mela/models/account.dart';
 
 class Distributor {
-  String name;
+  String place;
   String address;
-  String lngLat;
-  List<Product> products;
+  String city;
+  String owner;
+  String phone;
 
-  Distributor(
-      {required this.products,
-      required this.name,
-      required this.address,
-      required this.lngLat});
+  Distributor({
+    required this.place,
+    required this.city,
+    required this.address,
+    required this.owner,
+    required this.phone,
+  });
 
   factory Distributor.fromJson(var json) {
     return Distributor(
-      name: json['name'],
-      products: json['products'],
-      address: json['address'],
-      lngLat: json['lngLat'],
-    );
+        place: json['place'],
+        owner: json['owner'],
+        address: json['address'],
+        city: json['city'],
+        phone: json['phone']);
   }
 }

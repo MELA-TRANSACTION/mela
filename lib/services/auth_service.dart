@@ -27,6 +27,7 @@ class AuthService {
     required String password,
     required String name,
   }) async {
+    print(phone);
     var user = await firebaseAuth.createUserWithEmailAndPassword(
         email: phone + "@mela.com", password: password);
 

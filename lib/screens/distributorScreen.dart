@@ -19,6 +19,8 @@ class DistributorScreen extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<DistributorsBloc, DistributorsState>(
+        bloc: BlocProvider.of<DistributorsBloc>(context)
+          ..add(LoadDistributorsEvent()),
         builder: (context, state) {
           if (state is DistributorsSuccess) {
             if (state.distributors.isEmpty) {
@@ -66,13 +68,13 @@ class DistributorTile extends StatelessWidget {
       ),
       margin: const EdgeInsets.only(top: 0.7),
       child: ListTile(
-        title: const Text(
-          "Chez Pili-Pili",
-          style: TextStyle(
+        title: Text(
+          "${distributor.place} ",
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
           ),
         ),
-        subtitle: const Text("Rond point tchukudu"),
+        subtitle: Text("${distributor.city} / ${distributor.address}"),
         trailing: IconButton(
           onPressed: () {},
           icon: const Icon(CupertinoIcons.location),

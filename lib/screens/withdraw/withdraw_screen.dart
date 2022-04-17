@@ -34,9 +34,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               });
             },
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
               label: const Text("Distributeur"),
               suffixIcon: TextButton(
                 onPressed: () {
@@ -58,8 +55,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ),
                 ),
               ),
-              fillColor: Colors.white,
-              filled: true,
+              // fillColor: Colors.white,
+              // filled: true,
             ),
           ),
           const SizedBox(

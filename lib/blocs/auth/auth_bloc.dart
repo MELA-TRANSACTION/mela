@@ -37,18 +37,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
         await authService.loginUser(
-            phone: event.phone, password: event.password);
+            phone: event.phone, password: event.password + "0000");
 
         add(StartAppEvent());
       }
       if (event is Register) {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
-        await authService.registerUser(
+        var user = await authService.registerUser(
           name: event.name,
           phone: event.phone,
-          password: event.password,
+          password: event.password + "0000",
         );
+        print(user.user!.uid);
 
         add(StartAppEvent());
       }

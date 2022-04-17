@@ -73,7 +73,7 @@ class AccountProductTile extends StatelessWidget {
         ),
         title: Text(product.name),
         subtitle: Text(product.format),
-        trailing: Text(product.value),
+        trailing: Text(product.quantity.toString()),
       ),
     );
   }

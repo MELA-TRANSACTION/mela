@@ -16,27 +16,25 @@ class Account {
 class Product {
   String id;
   String name;
-  String value;
+  double quantity;
   String format;
   double price;
-  String imgUrl;
+
   Product({
     required this.id,
     required this.name,
-    required this.value,
+    required this.quantity,
     required this.format,
     required this.price,
-    required this.imgUrl,
   });
 
   factory Product.fromJson(var json) {
     return Product(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
-      value: json['value'],
+      quantity: double.parse(json['quantity']),
       format: json['format'],
-      price: json['price'],
-      imgUrl: json['imgUrl'],
+      price: double.parse(json['price']),
     );
   }
 
@@ -44,10 +42,9 @@ class Product {
     return {
       "id": id,
       "name": name,
-      "value": value,
+      "quantity": quantity,
       "format": format,
       "price": price,
-      "imgUrl": imgUrl
     };
   }
 }

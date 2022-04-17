@@ -107,7 +107,7 @@ class AccountWithdrawTile extends StatelessWidget {
           height: 44,
           width: 40,
         ),
-        title: Text("${product.value} ${product.name}"),
+        title: Text("${product.quantity} ${product.name}"),
         subtitle: Text(product.format),
         trailing: Checkbox(
           onChanged: (value) {},

@@ -103,28 +103,24 @@ class MyApp extends StatelessWidget {
             ),
             brightness: Brightness.dark,
           ),
-          home: StreamBuilder<bool?>(
-              stream: Check.checkUser().asStream(),
-              builder: (context, snapshot) {
-                return BlocBuilder<AuthBloc, AuthState>(
-                  //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
-                  builder: (context, state) {
-                    if (state is UnAuthenticated) {
-                      return const WelcomeScreen();
-                    }
-                    if (state is AuthSuccess) {
-                      //print(state.user);
-                      return const AccountPage();
-                    }
+          home: BlocBuilder<AuthBloc, AuthState>(
+            //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
+            builder: (context, state) {
+              if (state is UnAuthenticated) {
+                return const WelcomeScreen();
+              }
+              if (state is AuthSuccess) {
+                //print(state.user);
+                return const AccountPage();
+              }
 
-                    return const Scaffold(
-                      body: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                );
-              }),
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
