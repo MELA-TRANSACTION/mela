@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
+import 'package:mela/blocs/product/product_bloc.dart';
+import 'package:mela/blocs/trans/trans_bloc.dart';
+import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/welcome_screen.dart';
 import 'package:mela/screens/pages/account_page.dart';
 
-import 'package:mela/services/account_service.dart';
 import 'package:mela/services/api_service.dart';
 import 'package:mela/services/auth_service.dart';
+import 'package:mela/services/product_service.dart';
+import 'package:mela/services/trans_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -39,16 +42,28 @@ class MyApp extends StatelessWidget {
         ),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => AccountBloc(accountService: AccountService())
-              ..add(
-                LoadAccountEvent(),
-              ),
-          ),
+          // BlocProvider(
+          //   create: (context) => AccountBloc(accountService: AccountService())
+          //     ..add(
+          //       LoadAccountEvent(),
+          //     ),
+          // ),
           BlocProvider(
             create: (context) => DistributorsBloc(ApiService())
               ..add(
                 LoadDistributorsEvent(),
+              ),
+          ),
+          BlocProvider(
+            create: (context) => ProductBloc(ProductService())
+              ..add(
+                LoadProductEvent(),
+              ),
+          ),
+          BlocProvider(
+            create: (context) => TransBloc(TransService())
+              ..add(
+                LoadTransEvent(),
               ),
           ),
           BlocProvider(create: (context) => ClientsBloc(ApiService())),
@@ -61,7 +76,7 @@ class MyApp extends StatelessWidget {
               secondary: Colors.amber[800],
             ),
             primaryColor: const Color(0xff0e2763),
-            scaffoldBackgroundColor: const Color(0xff0e2763),
+            scaffoldBackgroundColor: const Color(0xff0c2359),
             inputDecorationTheme: InputDecorationTheme(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -90,15 +105,15 @@ class MyApp extends StatelessWidget {
             ),
             appBarTheme: const AppBarTheme(
               elevation: 0.9,
-              color: Colors.white,
+              color: Color(0xff0e2763),
               iconTheme: IconThemeData(
-                color: Colors.black,
+                color: Colors.white,
               ),
               systemOverlayStyle: SystemUiOverlayStyle.light,
               titleTextStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
               ),
             ),
             brightness: Brightness.dark,
@@ -109,9 +124,13 @@ class MyApp extends StatelessWidget {
               if (state is UnAuthenticated) {
                 return const WelcomeScreen();
               }
-              if (state is AuthSuccess) {
+              if (state is AuthSuccessClient) {
                 //print(state.user);
                 return const AccountPage();
+              }
+
+              if (state is AuthSuccessDistributor) {
+                return const DashboardDistributor();
               }
 
               return const Scaffold(

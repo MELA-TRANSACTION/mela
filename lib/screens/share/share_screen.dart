@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
-import 'package:mela/models/account.dart';
+import 'package:mela/models/product.dart';
 
 class ShareScreen extends StatefulWidget {
   const ShareScreen({Key? key, required this.products}) : super(key: key);

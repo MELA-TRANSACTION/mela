@@ -10,7 +10,7 @@ abstract class AuthEvent extends Equatable {
 class StartAppEvent extends AuthEvent {}
 
 class UpdateAuthState extends AuthEvent {
-  final User? user;
+  final auth.User? user;
 
   const UpdateAuthState(this.user);
 

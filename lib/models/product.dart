@@ -29,12 +29,13 @@ class Product {
   });
 
   factory Product.fromJson(var json) {
+    print(json);
     return Product(
-      id: json['id'].toString(),
+      id: json['id'],
       name: json['name'],
-      quantity: double.parse(json['quantity']),
-      format: json['format'],
-      price: double.parse(json['price']),
+      quantity: double.parse(json['quantity'].toString()),
+      format: json['format'] ?? "",
+      price: double.parse(json['price'].toString()),
     );
   }
 

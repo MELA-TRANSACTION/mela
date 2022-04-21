@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mela/models/account.dart';
+import 'package:mela/models/product.dart';
 
 class ProductService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -9,8 +9,10 @@ class ProductService {
   Stream<List<Product>> getProducts() {
     String uid = _auth.currentUser!.uid;
     return _firestore
+        .collection("users")
+        .doc(uid)
         .collection("products")
-        .where("owner.uid", isEqualTo: uid)
+        .orderBy("createdAt", descending: true)
         .snapshots()
         .map(
           (event) => event.docs

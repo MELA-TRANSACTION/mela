@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
 
-enum AppScreen { LOGIN, REGISTER, WELCOM }
+enum AppScreen { login, register, welcome, distributor }
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  var appScreen = AppScreen.WELCOM;
+  var appScreen = AppScreen.welcome;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
@@ -33,10 +33,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (appScreen == AppScreen.LOGIN) {
+    if (appScreen == AppScreen.login) {
       return login();
-    } else if (appScreen == AppScreen.REGISTER) {
+    } else if (appScreen == AppScreen.register) {
       return register();
+    } else if (appScreen == AppScreen.distributor) {
+      return loginDistributor();
     } else {
       return defaultScreen();
     }
@@ -87,7 +89,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: () {
                 setState(() {
                   setState(() {
-                    appScreen = AppScreen.LOGIN;
+                    appScreen = AppScreen.login;
                   });
                 });
               },
@@ -101,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 //minimumSize: Size.fromWidth(100),
               ),
               child: const Text(
-                "Login",
+                "J'utilise",
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -111,7 +113,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  appScreen = AppScreen.REGISTER;
+                  appScreen = AppScreen.distributor;
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -120,9 +122,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 96, vertical: 16)),
+                      const EdgeInsets.symmetric(horizontal: 84, vertical: 16)),
               child: const Text(
-                "Creer compte",
+                "Je suis distributeur",
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -245,7 +247,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               OutlinedButton(
                 onPressed: () {
                   setState(() {
-                    appScreen = AppScreen.WELCOM;
+                    appScreen = AppScreen.login;
+                  });
+                },
+                child: const Text(
+                  "login",
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  setState(() {
+                    appScreen = AppScreen.welcome;
                   });
                 },
                 child: const Text(
@@ -314,7 +334,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: const TextStyle(color: Colors.white),
             ),
             TextFormField(
-              controller: passwordRegister,
+              controller: passwordLogin,
               decoration: const InputDecoration(
                 hintText: "Ex: 00000000 ",
                 label: Text("Mot de passe"),
@@ -367,7 +387,128 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             OutlinedButton(
               onPressed: () {
                 setState(() {
-                  appScreen = AppScreen.WELCOM;
+                  appScreen = AppScreen.register;
+                });
+              },
+              child: const Text(
+                "Creer compte",
+                style: TextStyle(color: Colors.black),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget loginDistributor() {
+    return Scaffold(
+      //appBar: AppBar(),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            const SizedBox(
+              height: 40,
+            ),
+            Column(
+              children: const [
+                Text(
+                  "Login",
+                  style: TextStyle(fontSize: 32, color: Colors.white),
+                ),
+                Text(
+                  "Distributor",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 70,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            IntlPhoneField(
+              decoration: const InputDecoration(
+                labelText: 'Phone Number',
+              ),
+              initialCountryCode: 'CD',
+              //showCountryFlag: false,
+              dropdownTextStyle: const TextStyle(color: Colors.white),
+              onChanged: (phone) {
+                setState(() {
+                  _phoneLogin = phone.completeNumber;
+                });
+              },
+              style: const TextStyle(color: Colors.white),
+            ),
+            TextFormField(
+              controller: passwordLogin,
+              decoration: const InputDecoration(
+                hintText: "Ex: 00000000 ",
+                label: Text("Mot de passe"),
+                prefixIcon: Icon(CupertinoIcons.lock),
+              ),
+              style: const TextStyle(color: Colors.white),
+              obscureText: true,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(4),
+              ],
+            ),
+            const SizedBox(
+              height: 80,
+            ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthLoading) {
+                  return ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Loading ..."),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  );
+                }
+                return ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      BlocProvider.of<AuthBloc>(context)
+                          .add(Login(_phoneLogin, passwordLogin.text));
+                    }
+                  },
+                  child: const Text("Connexion"),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  appScreen = AppScreen.welcome;
                 });
               },
               child: const Text(

@@ -13,10 +13,19 @@ class UnAuthenticated extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {
-  final User user;
+class AuthSuccessClient extends AuthState {
+  final auth.User user;
 
-  const AuthSuccess(this.user);
+  const AuthSuccessClient(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
+class AuthSuccessDistributor extends AuthState {
+  final auth.User user;
+
+  const AuthSuccessDistributor(this.user);
 
   @override
   List<Object> get props => [user];

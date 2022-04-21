@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mela/models/account.dart';
+import 'package:mela/models/product.dart';
 import 'package:mela/services/account_service.dart';
 
 part 'account_event.dart';

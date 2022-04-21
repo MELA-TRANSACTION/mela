@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
-import 'package:mela/models/account.dart';
+
+import 'package:mela/models/product.dart';
 
 class WithDrawFinish extends StatefulWidget {
   const WithDrawFinish({Key? key, required this.distributor}) : super(key: key);
@@ -30,7 +29,7 @@ class _WithDrawFinishState extends State<WithDrawFinish> {
           )
         ],
       ),
-      body: BlocBuilder<AccountBloc, AccountState>(
+      /* body: BlocBuilder<AccountBloc, AccountState>(
         builder: (context, state) {
           if (state is AccountLoadSuccess) {
             if (state.products.isEmpty) {
@@ -64,11 +63,11 @@ class _WithDrawFinishState extends State<WithDrawFinish> {
             child: CircularProgressIndicator(),
           );
         },
-      ),
+      ),*/
       bottomNavigationBar: ElevatedButton(
         onPressed: () {
-          BlocProvider.of<AccountBloc>(context).add(WithdrawProductEvent(
-              products: [], destinateur: widget.distributor));
+          // BlocProvider.of<AccountBloc>(context).add(WithdrawProductEvent(
+          //     products: const [], destinateur: widget.distributor));
         },
         child: const Text(
           "Je retire 4 B",
