@@ -20,45 +20,51 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text(
-          "Balance",
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 15,
-          ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: Column(
+          children: [
+            AppBar(
+              elevation: 0,
+              title: const Text(
+                "Balance",
+                // style: TextStyle(
+                //   fontWeight: FontWeight.w400,
+                //   fontSize: 15,
+                // ),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    CupertinoIcons.bell,
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    BlocProvider.of<AuthBloc>(context).add(Logout());
+                  },
+                  style: OutlinedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      side: BorderSide.none,
+                    ),
+                  ),
+                  child: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const BalanceWidget(),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              CupertinoIcons.bell,
-              color: Colors.deepPurpleAccent,
-            ),
-          ),
-          OutlinedButton(
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(Logout());
-            },
-            style: OutlinedButton.styleFrom(
-              shape: const RoundedRectangleBorder(
-                side: BorderSide.none,
-              ),
-            ),
-            child: const Text(
-              "Logout",
-              style: TextStyle(
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
           // const LoginAction(),
-          const BalanceWidget(),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +77,7 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   );
                 },
-                label: "Partager avec",
+                label: "Partager ",
                 imageUrl: "images/wine.svg",
                 bgColor: Colors.blue[900],
               ),
@@ -186,8 +192,8 @@ class BalanceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.22,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      //height: MediaQuery.of(context).size.height * 0.17,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       //margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         //color: Theme.of(context).colorScheme.secondary,
@@ -202,7 +208,8 @@ class BalanceWidget extends StatelessWidget {
           if (state is AccountLoadSuccess) {
             var products = state.products;
 
-            return Column(
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -211,14 +218,14 @@ class BalanceWidget extends StatelessWidget {
                     Text(
                       "${products.length}",
                       style: TextStyle(
-                        fontSize: 56,
+                        fontSize: 40,
                         fontWeight: FontWeight.w600,
                         color: Colors.blue[900],
                       ),
                     ),
-                    SvgPicture.asset("images/wine.svg", height: 52),
+                    SvgPicture.asset("images/wine.svg", height: 36),
                     const Text(
-                      " Bouteilles",
+                      " Beers",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w400,

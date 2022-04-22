@@ -6,6 +6,7 @@ import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
+import 'package:mela/screens/recharge/list_product_screen.dart';
 import 'package:mela/screens/recharge/recharge_basket_screen.dart';
 
 class DashboardDistributor extends StatefulWidget {
@@ -138,7 +139,7 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const RechargeBasketScreen(),
+              builder: (context) => const ListProductScreen(),
             ),
           );
         },

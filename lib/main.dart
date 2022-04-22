@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mela/blocs/account/account_bloc.dart';
 
 import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:mela/screens/pages/account_page.dart';
 
 import 'package:mela/services/api_service.dart';
 import 'package:mela/services/auth_service.dart';
+import 'package:mela/services/client_trans.dart';
 import 'package:mela/services/product_service.dart';
 import 'package:mela/services/trans_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,12 +44,13 @@ class MyApp extends StatelessWidget {
         ),
       child: MultiBlocProvider(
         providers: [
-          // BlocProvider(
-          //   create: (context) => AccountBloc(accountService: AccountService())
-          //     ..add(
-          //       LoadAccountEvent(),
-          //     ),
-          // ),
+          BlocProvider(
+            create: (context) =>
+                AccountBloc(accountService: TransClientService())
+                  ..add(
+                    LoadAccountEvent(),
+                  ),
+          ),
           BlocProvider(
             create: (context) => DistributorsBloc(ApiService())
               ..add(

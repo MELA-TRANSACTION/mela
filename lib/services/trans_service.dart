@@ -15,7 +15,7 @@ class TransService {
         .where("distributor.uid", isEqualTo: uid)
         .snapshots()
         .map((event) {
-      print(event.docs[0].data());
+      //print(event.docs[0].data());
       return event.docs
           .map(
             (e) => Trans.fromJson(e.data()),

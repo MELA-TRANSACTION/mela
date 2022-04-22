@@ -17,25 +17,8 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(""),
-        actions: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
-            child: CheckboxListTile(
-              onChanged: (v) {},
-              value: isSelected,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              title: Text(
-                "Cocher tout",
-                style: TextStyle(
-                  color: Colors.blue[700],
-                ),
-              ),
-            ),
-          )
-        ],
+        title: const Text("Liste de produits"),
+        actions: [],
       ),
       body: BlocBuilder<AccountBloc, AccountState>(
         builder: (context, state) {
@@ -46,7 +29,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
                   child: Text(
-                    "Votre balance est vide veillez vous recharger d'abord",
+                    "Votre balance est vide, veillez vous recharger d'abord",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.grey.shade700,
@@ -107,11 +90,11 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-                  child: Text(
+                  child: const Text(
                     "Votre balance est vide veillez vous recharger d'abord",
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.grey.shade700,
+                      color: Colors.white,
                     ),
                     textAlign: TextAlign.center,
                   ),

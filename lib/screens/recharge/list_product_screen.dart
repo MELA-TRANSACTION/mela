@@ -118,4 +118,96 @@ class ProductTile extends StatelessWidget {
       ),
     );
   }
+
+  showBott(BuildContext context, Product product) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.only(bottom: 24),
+          color: Colors.white,
+          child: Form(
+            child: Column(
+              children: [
+                Container(
+                  height: 64,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.orange,
+                  child: ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white70,
+                      ),
+                    ),
+                    title: const Text(
+                      "produit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12,
+                      ),
+                    ),
+                    subtitle: Text(
+                      product.name,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    trailing: Text(
+                      "${product.format} \$",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // if (_globalKey.currentState!.validate()) {
+                          //   _globalKey.currentState!.save();
+                          //   BlocProvider.of<ProductBloc>(context).add(
+                          //     AddStockProductEvent(
+                          //         product.id, num.parse(controller.text)),
+                          //   );
+                          //   Navigator.pop(context);
+                          // }
+                        },
+                        child: const Text("Ajouter"),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 80,
+                            vertical: 15,
+                          ),
+                          primary: Colors.black,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

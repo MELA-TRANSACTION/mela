@@ -26,7 +26,7 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
                   color: const Color(0xff0e2763),
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(16)),
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
               child: Column(
                 children: [
                   OutlinedButton(
@@ -80,7 +80,7 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
                     //enabled: false,
                   ),
                   const SizedBox(
-                    height: 72,
+                    height: 48,
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 2,
@@ -123,6 +123,10 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
                         ),
                       ],
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("Ajouter"),
                   )
                 ],
               ),

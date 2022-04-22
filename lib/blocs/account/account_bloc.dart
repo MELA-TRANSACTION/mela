@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mela/models/product.dart';
-import 'package:mela/services/account_service.dart';
+import 'package:mela/services/client_trans.dart';
 
 part 'account_event.dart';
 part 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  final AccountService accountService;
+  final TransClientService accountService;
   StreamSubscription? _subscription;
   AccountBloc({required this.accountService}) : super(AccountInitial()) {
     on<AccountEvent>((event, emit) async {
