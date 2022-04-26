@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
 import 'package:mela/models/product.dart';
@@ -34,11 +35,11 @@ class _ShareScreenState extends State<ShareScreen> {
           const SizedBox(
             height: 40,
           ),
-          TextFormField(
+          IntlPhoneField(
             onChanged: (v) => {
               setState(
                 () {
-                  destinateur = v;
+                  destinateur = v.completeNumber;
                 },
               )
             },
@@ -91,8 +92,12 @@ class _ShareScreenState extends State<ShareScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              BlocProvider.of<AccountBloc>(context).add(ShareProductEvent(
-                  products: [...widget.products], destinateur: destinateur));
+              BlocProvider.of<AccountBloc>(context).add(
+                ShareProductEvent(
+                  products: [...widget.products],
+                  destinateur: destinateur,
+                ),
+              );
             },
             child: const Text("Terminer"),
             style: ElevatedButton.styleFrom(

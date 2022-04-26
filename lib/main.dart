@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
 
 import 'package:mela/blocs/auth/auth_bloc.dart';
+import 'package:mela/blocs/basket/basket_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/blocs/product/product_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
+import 'package:mela/models/basket.dart';
 import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/welcome_screen.dart';
 import 'package:mela/screens/pages/account_page.dart';
@@ -50,6 +52,12 @@ class MyApp extends StatelessWidget {
                   ..add(
                     LoadAccountEvent(),
                   ),
+          ),
+          BlocProvider(
+            create: (context) => BasketBloc(Basket())
+              ..add(
+                BasketStarted(),
+              ),
           ),
           BlocProvider(
             create: (context) => DistributorsBloc(ApiService())

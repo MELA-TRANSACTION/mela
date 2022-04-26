@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
+import 'package:mela/blocs/product/product_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
+import 'package:mela/screens/account_product_screen.dart';
 import 'package:mela/screens/recharge/list_product_screen.dart';
-import 'package:mela/screens/recharge/recharge_basket_screen.dart';
 
 class DashboardDistributor extends StatefulWidget {
   const DashboardDistributor({Key? key}) : super(key: key);
@@ -43,22 +44,6 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
                     CupertinoIcons.bell,
                   ),
                 ),
-                /* OutlinedButton(
-                  onPressed: () {
-                    BlocProvider.of<AuthBloc>(context).add(Logout());
-                  },
-                  style: OutlinedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      side: BorderSide.none,
-                    ),
-                  ),
-                  child: const Text(
-                    "Logout",
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                  ),
-                ),*/
               ],
             ),
             Expanded(
@@ -68,31 +53,70 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      //crossAxisAlignment: CrossAxisAlignment.end,
-                      // textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        const Text(
-                          "490",
-                          style: TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          width: 24,
-                          child: SvgPicture.asset(
-                            "images/wine.svg",
-                            height: 24,
-                            width: 22,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    BlocBuilder<ProductBloc, ProductState>(
+                      builder: (context, state) {
+                        if (state is ProductLoadSuccess) {
+                          return Row(
+                            //crossAxisAlignment: CrossAxisAlignment.end,
+                            // textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(
+                                "${calculateBalance(state.products)} ",
+                                style: const TextStyle(
+                                    fontSize: 32,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                width: 24,
+                                child: SvgPicture.asset(
+                                  "images/wine.svg",
+                                  height: 24,
+                                  width: 22,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
+                        return Row(
+                          //crossAxisAlignment: CrossAxisAlignment.end,
+                          // textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            const Text(
+                              "xxx",
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              width: 24,
+                              child: SvgPicture.asset(
+                                "images/wine.svg",
+                                height: 24,
+                                width: 22,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                    const Text(
-                      "voir plus",
-                      style: TextStyle(color: Colors.amber),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) => const AccountProductScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "voir plus",
+                        style: TextStyle(color: Colors.amber),
+                      ),
                     ),
                   ],
                 ),
@@ -160,6 +184,36 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
       ),
     );
   }
+
+  int calculateBalance(List<Product> products) {
+    print(">>>>>>${products[0].quantity}");
+    double i = 0;
+    for (var t in products) {
+      i += t.quantity;
+    }
+
+    return i.ceil();
+  }
+
+  String nFormatter(numb) {
+    var t = 0.0;
+    if (numb >= 1000000000) {
+      t = (numb / 1000000000);
+
+      return '$t G';
+    }
+    if (numb >= 1000000) {
+      t = (numb / 1000000);
+
+      return '$t M';
+    }
+    if (numb >= 1000) {
+      t = (numb / 1000);
+
+      return '$t K';
+    }
+    return numb.toString();
+  }
 }
 
 class TransTile extends StatelessWidget {
@@ -188,7 +242,7 @@ class TransTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "${nFormatter(trans.quantity)} ",
+                  "${trans.quantity} ",
                   style: const TextStyle(color: Colors.white, fontSize: 24),
                 ),
                 SizedBox(
@@ -241,36 +295,6 @@ class TransTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  int calculateBalance(List<Product> products) {
-    print(">>>>>>${products[0].quantity}");
-    double i = 0;
-    for (var t in products) {
-      i += t.quantity;
-    }
-
-    return i.ceil();
-  }
-
-  String nFormatter(numb) {
-    var t = 0.0;
-    if (numb >= 1000000000) {
-      t = (numb / 1000000000);
-
-      return '$t G';
-    }
-    if (numb >= 1000000) {
-      t = (numb / 1000000);
-
-      return '$t M';
-    }
-    if (numb >= 1000) {
-      t = (numb / 1000);
-
-      return '$t K';
-    }
-    return numb.toString();
   }
 
 /*

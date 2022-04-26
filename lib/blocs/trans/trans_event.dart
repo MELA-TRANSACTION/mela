@@ -19,10 +19,12 @@ class UpdateTransEvent extends TransEvent {
 }
 
 class AddTransactionEvent extends TransEvent {
-  final Map<String, dynamic> data;
+  final List<Product> products;
+  final String destinateur;
 
-  const AddTransactionEvent(this.data);
+  const AddTransactionEvent(
+      {required this.products, required this.destinateur});
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [products, destinateur];
 }

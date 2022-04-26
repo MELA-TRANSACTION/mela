@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
+import 'package:mela/models/user.dart';
 
 class TransService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Stream<List<Trans>> getTrans() {
@@ -24,12 +26,31 @@ class TransService {
     });
   }
 
-  Future addTrans(var data) async {
-    await _firestore.collection("transactions").add(data);
+  Future<User> getUser(phone) async {
+    final user = await _firestore
+        .collection("users")
+        .where("phone", isEqualTo: phone)
+        .get();
+
+    return User.fromJson(user.docs[0].data());
+  }
+
+  Future addTrans(List<Product> products, String destinateur) async {
+    var userSender = await getUser(_auth.currentUser!.email!.split("@")[0]);
+    var userReceiver = await getUser(destinateur);
+
+    await _firestore.collection("trans").add({
+      "sender": userSender.toJson(),
+      "receiver": userReceiver.toJson(),
+      "products": products.map((e) => e.toJson()).toList(),
+      "cost": 0,
+      "typeTrans": "Recharge-Client",
+      "createdAt": Timestamp.now(),
+    });
 
     final productsClient = await _firestore
         .collection("users")
-        .doc(data.client.uid)
+        .doc(userSender.uid)
         .collection("products")
         .get();
 
@@ -37,50 +58,49 @@ class TransService {
         productsClient.docs.map((e) => Product.fromJson(e.data())).toList();
 
     for (int i = 0; i < prodClients.length; i++) {
-      if (prodClients[i].id == data.products[i]['id']) {
+      if (prodClients[i].id == products[i].id) {
         await _firestore
             .collection("users")
-            .doc(data.client.uid)
+            .doc(userReceiver.uid)
             .collection("products")
             .doc(prodClients[i].id)
             .update({
-          "quantity": prodClients[i].quantity + data.products[i]['quantity'],
+          "quantity": prodClients[i].quantity + products[i].quantity,
         });
       } else {
         await _firestore
             .collection("users")
-            .doc(data.distributor.uid)
+            .doc(userReceiver.uid)
             .collection("products")
-            .add(data.products[i]);
+            .add(products[i].toJson());
       }
     }
 
-    final productsDistributor = await _firestore
+    final productsSender = await _firestore
         .collection("users")
-        .doc(data.client.uid)
+        .doc(userSender.uid)
         .collection("products")
         .get();
 
-    List<Product> prodDistr = productsDistributor.docs
-        .map((e) => Product.fromJson(e.data()))
-        .toList();
+    List<Product> prodDistr =
+        productsSender.docs.map((e) => Product.fromJson(e.data())).toList();
 
     for (int i = 0; i < prodClients.length; i++) {
-      if (prodDistr[i].id == data.products[i]['id']) {
+      if (prodDistr[i].id == products[i].id) {
         await _firestore
             .collection("users")
-            .doc(data.distributor.uid)
+            .doc(userSender.uid)
             .collection("products")
             .doc(prodClients[i].id)
             .update({
-          "quantity": prodClients[i].quantity - data.products[i]['quantity'],
+          "quantity": prodClients[i].quantity - products[i].quantity,
         });
       } else {
         await _firestore
             .collection("users")
-            .doc(data.distributor.uid)
+            .doc(userSender.uid)
             .collection("products")
-            .doc(data.products[i]['id'])
+            .doc(products[i].id)
             .delete();
       }
     }

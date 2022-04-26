@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/screens/withdraw/withdraw_finish.dart';
 
@@ -20,41 +21,28 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
+          horizontal: 24,
           vertical: 24,
         ),
         children: [
           const SizedBox(
             height: 40,
           ),
-          TextFormField(
+          IntlPhoneField(
             onChanged: (v) {
               setState(() {
-                distributor = v;
+                distributor = v.completeNumber;
               });
             },
-            decoration: InputDecoration(
-              label: const Text("Distributeur"),
-              suffixIcon: TextButton(
-                onPressed: () {
-                  BlocProvider.of<DistributorsBloc>(context).add(
-                    SearchDistributorEvent(distributor),
-                  );
-                },
-                child: const Text("Search"),
-              ),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "No",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
+            showCountryFlag: false,
+            initialCountryCode: "CD",
+            dropdownTextStyle: const TextStyle(
+              color: Colors.white,
+            ),
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              label: Text("Distributeur"),
+
               // fillColor: Colors.white,
               // filled: true,
             ),

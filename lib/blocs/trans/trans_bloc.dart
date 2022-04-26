@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
 import 'package:mela/services/trans_service.dart';
 
@@ -27,7 +28,7 @@ class TransBloc extends Bloc<TransEvent, TransState> {
         emit(TransStateSuccess(event.trans));
       }
       if (event is AddTransactionEvent) {
-        await transService.addTrans(event.data);
+        await transService.addTrans(event.products, event.destinateur);
       }
     });
   }
