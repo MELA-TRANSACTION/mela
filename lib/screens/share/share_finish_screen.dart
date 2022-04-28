@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/blocs/basket/basket_bloc.dart';
+import 'package:mela/components/basket_item.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/screens/share/share_screen.dart';
 
@@ -19,9 +20,34 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Liste de produits"),
-        actions: [],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(128),
+        child: Column(
+          children: [
+            AppBar(
+              title: const Text("Mes produits"),
+              actions: [],
+            ),
+            BlocBuilder<BasketBloc, BasketState>(
+              builder: (context, state) {
+                if (state is BasketLoaded) {
+                  return IconBtnWithCounter(
+                    press: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ShareScreen(),
+                        ),
+                      );
+                    },
+                    svgSrc: "images/cart.svg",
+                    numOfitem: state.totalChartItems,
+                  );
+                }
+                return Container();
+              },
+            )
+          ],
+        ),
       ),
       body: BlocBuilder<AccountBloc, AccountState>(
         builder: (context, state) {
@@ -56,6 +82,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                   product: product,
                   onTap: () {
                     showBott(context, product);
+                    print("${product.name}");
                   },
                 );
               },
@@ -69,50 +96,6 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
 
           return const Center(
             child: CircularProgressIndicator(),
-          );
-        },
-      ),
-      bottomNavigationBar: BlocBuilder<AccountBloc, AccountState>(
-        builder: (context, state) {
-          if (state is AccountLoadSuccess) {
-            if (state.products.isEmpty) {
-              return Center(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-                  child: const Text(
-                    "Votre balance est vide veillez vous recharger d'abord",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              );
-            }
-          }
-          return ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ShareScreen(products: []),
-                ),
-              );
-            },
-            child: const Text(
-              "Je partage 4 Bouteiles",
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: const RoundedRectangleBorder(),
-              primary: Colors.blue[800],
-              padding: const EdgeInsets.symmetric(
-                vertical: 20,
-              ),
-            ),
           );
         },
       ),
@@ -291,22 +274,25 @@ class ShareItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.only(top: 0.8),
-      child: ListTile(
-        leading: SvgPicture.asset(
-          "images/beer1.svg",
-          height: 44,
-          width: 40,
-        ),
-        title: Text(product.name),
-        subtitle: Text("${product.quantity} bouteils"),
-        trailing: Checkbox(
-          onChanged: (value) {},
-          value: false,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 1,
+        margin: const EdgeInsets.only(top: 0.8),
+        child: ListTile(
+          leading: SvgPicture.asset(
+            "images/beer1.svg",
+            height: 44,
+            width: 40,
+          ),
+          title: Text(product.name),
+          subtitle: Text("${product.quantity} bouteils"),
+          trailing: Checkbox(
+            onChanged: (value) {},
+            value: false,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
           ),
         ),
       ),

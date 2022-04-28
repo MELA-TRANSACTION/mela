@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
+import 'package:mela/blocs/basket/basket_bloc.dart';
 import 'package:mela/blocs/clients/clients_bloc.dart';
 import 'package:mela/models/product.dart';
 
 class ShareScreen extends StatefulWidget {
-  const ShareScreen({Key? key, required this.products}) : super(key: key);
-  final List<Product> products;
+  const ShareScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ShareScreen> createState() => _ShareScreenState();
@@ -43,6 +45,14 @@ class _ShareScreenState extends State<ShareScreen> {
                 },
               )
             },
+            initialCountryCode: "CD",
+            showCountryFlag: false,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            dropdownTextStyle: const TextStyle(
+              color: Colors.white,
+            ),
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -56,15 +66,14 @@ class _ShareScreenState extends State<ShareScreen> {
                 child: const Text("Search"),
               ),
               prefixIcon: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 8,
-                  ),
-                  child: Icon(
-                    Icons.phone_iphone_rounded,
-                  )),
-              fillColor: Colors.white,
-              filled: true,
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 8,
+                ),
+                child: Icon(
+                  Icons.phone_iphone_rounded,
+                ),
+              ),
             ),
           ),
           const SizedBox(
@@ -90,26 +99,98 @@ class _ShareScreenState extends State<ShareScreen> {
           const SizedBox(
             height: 72,
           ),
-          ElevatedButton(
-            onPressed: () {
-              BlocProvider.of<AccountBloc>(context).add(
-                ShareProductEvent(
-                  products: [...widget.products],
-                  destinateur: destinateur,
+          BlocBuilder<BasketBloc, BasketState>(
+            builder: (context, state) {
+              if (state is BasketLoaded) {
+                return ElevatedButton(
+                  onPressed: () {
+                    BlocProvider.of<AccountBloc>(context).add(ShareProductEvent(
+                        products: state.items, destinateur: destinateur));
+                  },
+                  child: const Text("Terminer"),
+                  style: ElevatedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                    primary: Colors.blue[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              }
+              return ElevatedButton(
+                onPressed: () {},
+                child: const Text("Loading ..."),
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                  primary: Colors.blue[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               );
             },
-            child: const Text("Terminer"),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-              primary: Colors.blue[900],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
           )
         ],
       ),
+    );
+  }
+
+  showConfirmBott(BuildContext context, List<Product> products) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) => Container(
+            padding: const EdgeInsets.only(bottom: 24),
+            height: 250,
+            color: Colors.white,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          BlocProvider.of<AccountBloc>(context).add(
+                            ShareProductEvent(
+                              products: products,
+                              destinateur: destinateur,
+                            ),
+                          );
+                          Navigator.pop(context);
+                          // }
+                        },
+                        child: const Text("Confirmer"),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 80,
+                            vertical: 15,
+                          ),
+                          primary: Colors.black,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

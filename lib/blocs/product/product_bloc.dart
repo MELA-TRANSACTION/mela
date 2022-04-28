@@ -23,7 +23,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             );
           });
         } catch (ex) {
-          print(ex);
+          //print(ex);
           emit(ProductLoadFailure());
         }
       }

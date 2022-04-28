@@ -186,7 +186,7 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
   }
 
   int calculateBalance(List<Product> products) {
-    print(">>>>>>${products[0].quantity}");
+    //print(">>>>>>${products[0].quantity}");
     double i = 0;
     for (var t in products) {
       i += t.quantity;

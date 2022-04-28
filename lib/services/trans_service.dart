@@ -13,8 +13,8 @@ class TransService {
     String uid = _auth.currentUser!.uid;
 
     return _firestore
-        .collection("transactions")
-        .where("distributor.uid", isEqualTo: uid)
+        .collection("trans")
+        .where("sender.uid", isEqualTo: uid)
         .snapshots()
         .map((event) {
       //print(event.docs[0].data());

@@ -172,15 +172,41 @@ class _WithDrawFinishState extends State<WithDrawFinish> {
                       const SizedBox(
                         width: 10,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 14,
-                            horizontal: 32,
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: const Text("Je confirme"),
+                      BlocBuilder<BasketBloc, BasketState>(
+                        builder: (context, state) {
+                          if (state is BasketLoaded) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                  horizontal: 32,
+                                ),
+                              ),
+                              onPressed: () {
+                                BlocProvider.of<AccountBloc>(context).add(
+                                  WithdrawProductEvent(
+                                    products: state.items,
+                                    destinateur: widget.distributor,
+                                  ),
+                                );
+                              },
+                              child: const Text("Je confirme"),
+                            );
+                          } else {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                  horizontal: 32,
+                                ),
+                              ),
+                              onPressed: () {
+                                // BlocProvider.of<AccountBloc>(context)..add(WithdrawProductEvent(products: products, destinateur: widget.distributor));
+                              },
+                              child: const Text("Loading ..."),
+                            );
+                          }
+                        },
                       ),
                     ],
                   )
