@@ -6,7 +6,11 @@ class Client {
   Client({required this.name, required this.uid, required this.phone});
 
   factory Client.fromJson(var json) {
-    return Client(name: json['name'], uid: json['uid'], phone: json['phone']);
+    print(json);
+    return Client(
+        name: json['name'] ?? "inconnue",
+        uid: json['uid'],
+        phone: json['phone']);
   }
 
   Map<String, dynamic> toJson() {

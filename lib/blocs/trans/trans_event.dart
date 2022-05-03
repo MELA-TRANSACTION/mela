@@ -19,12 +19,11 @@ class UpdateTransEvent extends TransEvent {
 }
 
 class AddTransactionEvent extends TransEvent {
-  final List<Product> products;
+  final Product product;
   final String destinateur;
 
-  const AddTransactionEvent(
-      {required this.products, required this.destinateur});
+  const AddTransactionEvent({required this.product, required this.destinateur});
 
   @override
-  List<Object> get props => [products, destinateur];
+  List<Object> get props => [product, destinateur];
 }

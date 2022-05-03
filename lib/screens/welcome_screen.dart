@@ -180,10 +180,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               IntlPhoneField(
                 decoration: const InputDecoration(
-                  labelText: 'Phone Number',
+                  labelText: 'Numero de telephone',
                 ),
                 initialCountryCode: 'CD',
-                //showCountryFlag: false,
+                showCountryFlag: false,
                 dropdownTextStyle: const TextStyle(color: Colors.white),
                 style: const TextStyle(
                   color: Colors.white,
@@ -233,7 +233,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     },
                     child: const Text("Creer compte"),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -247,24 +247,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               OutlinedButton(
                 onPressed: () {
                   setState(() {
-                    appScreen = AppScreen.login;
-                  });
-                },
-                child: const Text(
-                  "login",
-                  style: TextStyle(color: Colors.black),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  setState(() {
                     appScreen = AppScreen.welcome;
                   });
                 },
@@ -274,7 +256,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -321,10 +303,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             IntlPhoneField(
               decoration: const InputDecoration(
-                labelText: 'Phone Number',
+                labelText: 'Numero de telephone',
               ),
               initialCountryCode: 'CD',
-              //showCountryFlag: false,
+              showCountryFlag: false,
               dropdownTextStyle: const TextStyle(color: Colors.white),
               onChanged: (phone) {
                 setState(() {
@@ -442,10 +424,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             IntlPhoneField(
               decoration: const InputDecoration(
-                labelText: 'Phone Number',
+                labelText: 'Numero de telephone',
               ),
               initialCountryCode: 'CD',
-              //showCountryFlag: false,
+              showCountryFlag: false,
               dropdownTextStyle: const TextStyle(color: Colors.white),
               onChanged: (phone) {
                 setState(() {

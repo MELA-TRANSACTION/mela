@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -134,17 +135,18 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
               );
             }
             return ListView.builder(
-                itemCount: state.trans.length,
-                padding: const EdgeInsets.only(
-                  top: 16,
-                  bottom: 120,
-                  right: 1.8,
-                  left: 1.8,
-                ),
-                itemBuilder: (context, int index) {
-                  Trans trans = state.trans[index];
-                  return TransTile(trans: trans);
-                });
+              itemCount: state.trans.length,
+              padding: const EdgeInsets.only(
+                top: 16,
+                bottom: 120,
+                right: 10,
+                left: 10,
+              ),
+              itemBuilder: (context, int index) {
+                Trans trans = state.trans[index];
+                return TransTile(trans: trans);
+              },
+            );
           }
           if (state is TransStateFailure) {
             return const Center(
@@ -158,7 +160,9 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         extendedPadding: const EdgeInsets.symmetric(horizontal: 48),
         onPressed: () {
           Navigator.of(context).push(
@@ -226,15 +230,21 @@ class TransTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser!.uid;
     return Card(
       //color: Color(0xff0c2359),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      color: const Color(0xff0e2763),
-      margin: const EdgeInsets.only(top: 1),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      color: Colors.white,
+      margin: const EdgeInsets.only(
+        top: 1,
+      ),
+
+      // padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Container(
+        height: 78,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Row(
           children: [
             Row(
@@ -242,8 +252,11 @@ class TransTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "${trans.quantity} ",
-                  style: const TextStyle(color: Colors.white, fontSize: 24),
+                  "${trans.products.quantity.ceil()} ",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 24,
+                  ),
                 ),
                 SizedBox(
                   width: 24,
@@ -251,43 +264,53 @@ class TransTile extends StatelessWidget {
                     "images/wine.svg",
                     height: 24,
                     width: 22,
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Text(
                   "${trans.products.name} ",
-                  style: const TextStyle(color: Colors.white, fontSize: 8),
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 16,
+                  ),
                 ),
               ],
             ),
             const SizedBox(
               width: 56,
             ),
-            Column(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  trans.distributor!.name,
-                  style: const TextStyle(
-                    color: Colors.white70,
+                  trans.sender!.name,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(
-                  height: 8,
+                  child: Text(
+                    ' à ',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
                 Text(
-                  trans.distributor!.phone,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
+                  trans.receiver!.name,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 16,
                   ),
                 ),
               ],
             ),
             const Spacer(),
             Icon(
-              CupertinoIcons.arrow_turn_left_down,
-              color: trans.type == "Recharge_beer"
+              trans.sender!.uid != uid
+                  ? CupertinoIcons.arrow_turn_left_down
+                  : CupertinoIcons.arrow_turn_right_up,
+              color: trans.sender!.uid != uid
                   ? const Color(0xff21ce99)
                   : Colors.amber[800],
             )

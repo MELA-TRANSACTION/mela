@@ -31,7 +31,7 @@ class Product {
   factory Product.fromJson(var json) {
     print(json);
     return Product(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       quantity: double.parse(json['quantity'].toString()),
       format: json['format'] ?? "",

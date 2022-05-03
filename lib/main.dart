@@ -12,6 +12,7 @@ import 'package:mela/blocs/product/product_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/basket.dart';
 import 'package:mela/screens/dashbord_distributor.dart';
+import 'package:mela/screens/main_page.dart';
 import 'package:mela/screens/welcome_screen.dart';
 import 'package:mela/screens/pages/account_page.dart';
 
@@ -123,8 +124,8 @@ class MyApp extends StatelessWidget {
               systemOverlayStyle: SystemUiOverlayStyle.light,
               titleTextStyle: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
+                fontSize: 21,
+                fontWeight: FontWeight.w600,
               ),
             ),
             brightness: Brightness.dark,
@@ -137,7 +138,7 @@ class MyApp extends StatelessWidget {
               }
               if (state is AuthSuccessClient) {
                 //print(state.user);
-                return const AccountPage();
+                return const MainPage();
               }
 
               if (state is AuthSuccessDistributor) {

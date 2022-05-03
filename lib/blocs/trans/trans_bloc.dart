@@ -17,9 +17,11 @@ class TransBloc extends Bloc<TransEvent, TransState> {
       if (event is LoadTransEvent) {
         try {
           _subscription?.cancel();
-          _subscription = transService
-              .getTrans()
-              .listen((event) => add(UpdateTransEvent(event)));
+          _subscription = transService.getTrans().listen(
+                (event) => add(
+                  UpdateTransEvent(event),
+                ),
+              );
         } catch (ex) {
           emit(TransStateFailure());
         }
@@ -28,7 +30,10 @@ class TransBloc extends Bloc<TransEvent, TransState> {
         emit(TransStateSuccess(event.trans));
       }
       if (event is AddTransactionEvent) {
-        await transService.addTrans(event.products, event.destinateur);
+        await transService.rechargerClient(
+          event.product,
+          event.destinateur,
+        );
       }
     });
   }

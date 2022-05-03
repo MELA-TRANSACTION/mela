@@ -14,7 +14,7 @@ class UnAuthenticated extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthSuccessClient extends AuthState {
-  final auth.User user;
+  final User user;
 
   const AuthSuccessClient(this.user);
 
@@ -23,7 +23,7 @@ class AuthSuccessClient extends AuthState {
 }
 
 class AuthSuccessDistributor extends AuthState {
-  final auth.User user;
+  final User user;
 
   const AuthSuccessDistributor(this.user);
 

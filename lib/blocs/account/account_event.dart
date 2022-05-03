@@ -19,20 +19,20 @@ class UpdateAccountEvent extends AccountEvent {
 }
 
 class ShareProductEvent extends AccountEvent {
-  final List<Product> products;
+  final Product product;
   final String destinateur;
   const ShareProductEvent({
-    required this.products,
+    required this.product,
     required this.destinateur,
   });
 }
 
 class WithdrawProductEvent extends AccountEvent {
-  final List<Product> products;
+  final Product product;
   final String destinateur;
 
   const WithdrawProductEvent({
-    required this.products,
+    required this.product,
     required this.destinateur,
   });
 }

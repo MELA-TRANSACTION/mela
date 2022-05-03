@@ -4,151 +4,228 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/basket/basket_bloc.dart';
-import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
+import 'package:mela/screens/recharge/finalisation_recharge.dart';
 
 class RechargeBasketScreen extends StatefulWidget {
-  const RechargeBasketScreen({Key? key}) : super(key: key);
+  const RechargeBasketScreen({Key? key, required this.product})
+      : super(key: key);
+
+  final Product product;
 
   @override
   State<RechargeBasketScreen> createState() => _RechargeBasketScreenState();
 }
 
 class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
-  String phoneDestinateur = "";
+  String destinateur = '';
+  int quantity = 0;
+
+  late Product product;
+
+  @override
+  void initState() {
+    product = widget.product;
+    quantity = widget.product.quantity.ceil();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Recharge client"),
+        title: const Text("Recharger Client"),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            CupertinoIcons.chevron_left,
+            color: Colors.blue[50],
+          ),
+        ),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: BlocBuilder<BasketBloc, BasketState>(
-                      builder: (context, state) {
-                        if (state is BasketLoaded) {
-                          return ListView.builder(
-                            itemCount: state.items.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              var p = state.items[index];
-                              return ProdBasketTile(
-                                product: p,
-                              );
-                            },
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 32,
-                  ),
-                ],
+      body: ListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          //vertical: 24,
+        ),
+        children: [
+          const SizedBox(
+            height: 56,
+          ),
+          Row(
+            children: [
+              Text(
+                quantity.ceil().toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              height: MediaQuery.of(context).size.height / 2,
-              //color: Colors.blue.shade100,
-              child: ListView(
+              SvgPicture.asset(
+                "images/wine.svg",
+                height: 24,
+                width: 22,
+                color: Colors.white,
+              ),
+              Text(
+                product.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
+              const Spacer(),
+              Row(
                 children: [
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Destinateur",
-                      style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (quantity < product.quantity) {
+                          quantity++;
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: 72,
+                      height: 48,
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
                         color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          bottomLeft: Radius.circular(8),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          CupertinoIcons.add,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  IntlPhoneField(
-                    decoration: const InputDecoration(
-                      labelText: 'numero du client',
-                    ),
-                    initialCountryCode: 'CD',
-                    showCountryFlag: false,
-                    dropdownTextStyle: const TextStyle(color: Colors.white),
-                    onChanged: (phone) {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
-                        phoneDestinateur = phone.completeNumber;
+                        if (quantity <= 1) {
+                          quantity = 1;
+                        } else {
+                          quantity--;
+                        }
                       });
                     },
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  BlocBuilder<BasketBloc, BasketState>(
-                    builder: (context, state) {
-                      if (state is BasketLoaded) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            print(state.items.map((e) => e.toJson()).toList());
-                            BlocProvider.of<TransBloc>(context).add(
-                              AddTransactionEvent(
-                                products: state.items,
-                                destinateur: phoneDestinateur,
-                              ),
-                            );
-                            // BlocProvider.of<BasketBloc>(context)
-                            //     .add(InitBasketEvent());
-                          },
-                          child: const Text(
-                            "Terminer",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 40,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return ElevatedButton(
-                          onPressed: () {
-                            // BlocProvider.of<TransBloc>(context).add(AddTransactionEvent(products: products, destinateur: destinateur));
-                          },
-                          child: const Text(
-                            "Loading ...",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 40,
-                            ),
-                          ),
-                        );
-                      }
-                    },
+                    child: Container(
+                      width: 72,
+                      height: 48,
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          CupertinoIcons.minus,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
+            ],
+          ),
+          const SizedBox(
+            height: 56,
+          ),
+          IntlPhoneField(
+            onChanged: (v) => {
+              setState(
+                () {
+                  destinateur = v.completeNumber;
+                },
+              )
+            },
+            initialCountryCode: "CD",
+            showCountryFlag: false,
+            style: const TextStyle(
+              color: Colors.white,
             ),
-          ],
-        ),
+            dropdownTextStyle: const TextStyle(
+              color: Colors.white,
+            ),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              label: const Text("Destinateur"),
+              prefixIcon: const Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 8,
+                ),
+                child: Icon(
+                  Icons.phone_iphone_rounded,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          const SizedBox(
+            height: 56,
+          ),
+          BlocBuilder<BasketBloc, BasketState>(
+            builder: (context, state) {
+              if (state is BasketLoaded) {
+                return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FinalisationRecharge(
+                          product:
+                              product.copyWith(quantity: quantity.toDouble()),
+                          receiver: destinateur,
+                          typeTrans: "Partager",
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text("Recharger"),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 0,
+                    ),
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              }
+              return ElevatedButton(
+                onPressed: () {},
+                child: const Text("Loading ..."),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 0,
+                  ),
+                  primary: Colors.blue[900],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
@@ -157,65 +234,50 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
 class ProdBasketTile extends StatelessWidget {
   const ProdBasketTile({
     required this.product,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
   final Product product;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: 120,
-      child: Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SvgPicture.asset(
-                  "images/wine.svg",
-                  height: 64,
-                  width: 44,
-                  color: Colors.white,
-                ),
-                Text(
-                  product.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  "${product.quantity} items",
-                  style: const TextStyle(
-                    color: Colors.amber,
-                  ),
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 60,
+        width: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SvgPicture.asset(
+              "images/wine.svg",
+              height: 64,
+              width: 44,
+              color: Colors.white,
             ),
-          ),
-          Positioned(
-            right: -10,
-            top: -10,
-            child: IconButton(
-              onPressed: () {
-                BlocProvider.of<BasketBloc>(context)
-                    .add(BasketItemDeleted(product));
-                BlocProvider.of<BasketBloc>(context).add(BasketStarted());
-              },
-              icon: const Icon(
-                CupertinoIcons.xmark,
-                color: Colors.orange,
+            Text(
+              product.name,
+              style: const TextStyle(
+                color: Colors.white,
               ),
             ),
-          )
-        ],
-      ),
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(8),
+            Text(
+              "${product.quantity.ceil()}",
+              style: const TextStyle(
+                color: Colors.amber,
+                fontSize: 24,
+              ),
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).primaryColor,
+        ),
       ),
     );
   }

@@ -12,18 +12,18 @@ class TransService {
   Stream<List<Trans>> getTrans() {
     String uid = _auth.currentUser!.uid;
 
-    return _firestore
+    var transSended = _firestore
+        .collection("users")
+        .doc(uid)
         .collection("trans")
-        .where("sender.uid", isEqualTo: uid)
+        .orderBy("createdAt", descending: true)
         .snapshots()
-        .map((event) {
-      //print(event.docs[0].data());
-      return event.docs
-          .map(
-            (e) => Trans.fromJson(e.data()),
-          )
-          .toList();
-    });
+        .map((event) => event.docs.map((e) {
+              print(e.data());
+              return Trans.fromJson(e.data());
+            }).toList());
+
+    return transSended;
   }
 
   Future<User> getUser(phone) async {
@@ -35,74 +35,51 @@ class TransService {
     return User.fromJson(user.docs[0].data());
   }
 
-  Future addTrans(List<Product> products, String destinateur) async {
+  Future<void> rechargerClient(
+    Product product,
+    String client,
+  ) async {
+    await addTrans(product, client, "Recharge", 0);
+  }
+
+  Future<void> addTrans(
+      Product product, String destinateur, String transType, int cost) async {
     var userSender = await getUser(_auth.currentUser!.email!.split("@")[0]);
     var userReceiver = await getUser(destinateur);
+
+    await _firestore
+        .collection("users")
+        .doc(userSender.uid)
+        .collection("trans")
+        .add({
+      "sender": userSender.toJson(),
+      "receiver": userReceiver.toJson(),
+      "product": product.toJson(),
+      "cost": cost,
+      "typeTrans": "sent-" + transType,
+      "createdAt": Timestamp.now(),
+    });
+
+    await _firestore
+        .collection("users")
+        .doc(userReceiver.uid)
+        .collection("trans")
+        .add({
+      "sender": userSender.toJson(),
+      "receiver": userReceiver.toJson(),
+      "product": product.toJson(),
+      "cost": cost,
+      "typeTrans": "received-" + transType,
+      "createdAt": Timestamp.now(),
+    });
 
     await _firestore.collection("trans").add({
       "sender": userSender.toJson(),
       "receiver": userReceiver.toJson(),
-      "products": products.map((e) => e.toJson()).toList(),
-      "cost": 0,
-      "typeTrans": "Recharge-Client",
+      "product": product.toJson(),
+      "cost": cost,
+      "typeTrans": transType,
       "createdAt": Timestamp.now(),
     });
-
-    final productsClient = await _firestore
-        .collection("users")
-        .doc(userSender.uid)
-        .collection("products")
-        .get();
-
-    List<Product> prodClients =
-        productsClient.docs.map((e) => Product.fromJson(e.data())).toList();
-
-    for (int i = 0; i < prodClients.length; i++) {
-      if (prodClients[i].id == products[i].id) {
-        await _firestore
-            .collection("users")
-            .doc(userReceiver.uid)
-            .collection("products")
-            .doc(prodClients[i].id)
-            .update({
-          "quantity": prodClients[i].quantity + products[i].quantity,
-        });
-      } else {
-        await _firestore
-            .collection("users")
-            .doc(userReceiver.uid)
-            .collection("products")
-            .add(products[i].toJson());
-      }
-    }
-
-    final productsSender = await _firestore
-        .collection("users")
-        .doc(userSender.uid)
-        .collection("products")
-        .get();
-
-    List<Product> prodDistr =
-        productsSender.docs.map((e) => Product.fromJson(e.data())).toList();
-
-    for (int i = 0; i < prodClients.length; i++) {
-      if (prodDistr[i].id == products[i].id) {
-        await _firestore
-            .collection("users")
-            .doc(userSender.uid)
-            .collection("products")
-            .doc(prodClients[i].id)
-            .update({
-          "quantity": prodClients[i].quantity - products[i].quantity,
-        });
-      } else {
-        await _firestore
-            .collection("users")
-            .doc(userSender.uid)
-            .collection("products")
-            .doc(products[i].id)
-            .delete();
-      }
-    }
   }
 }

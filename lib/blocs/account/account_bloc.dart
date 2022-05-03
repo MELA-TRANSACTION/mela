@@ -20,7 +20,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
                 (event) => add(UpdateAccountEvent(event)),
               );
         } catch (ex) {
-          print(ex);
+          //print(ex);
           emit(AccountLoadFailure());
         }
       }
@@ -29,12 +29,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       }
       if (event is WithdrawProductEvent) {
         emit(AccountLoadingState());
-        await accountService.withDrawBeer(event.products, event.destinateur);
+        await accountService.withdrawBeer(event.product, event.destinateur);
         add(LoadAccountEvent());
       }
       if (event is ShareProductEvent) {
         emit(AccountLoadingState());
-        await accountService.shareBeer(event.products, event.destinateur);
+        await accountService.shareBeer(event.product, event.destinateur);
         add(LoadAccountEvent());
       }
     });

@@ -12,7 +12,7 @@ class ProductService {
         .collection("users")
         .doc(uid)
         .collection("products")
-        .orderBy("createdAt", descending: true)
+        //.orderBy("createdAt", descending: true)
         .snapshots()
         .map(
           (event) => event.docs

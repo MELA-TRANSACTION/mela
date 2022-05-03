@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:mela/models/user.dart';
 import 'package:mela/services/auth_service.dart';
 
 part 'auth_event.dart';
@@ -30,10 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           var user = await authService.isClient(event.user!.uid);
 
           if (user.role == "client") {
-            emit(AuthSuccessClient(event.user!));
+            emit(AuthSuccessClient(user));
           }
           if (user.role == "distributor") {
-            emit(AuthSuccessDistributor(event.user!));
+            emit(AuthSuccessDistributor(user));
           }
         } else {
           emit(UnAuthenticated());
@@ -51,12 +52,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (event is Register) {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
-        var user = await authService.registerUser(
+        await authService.registerUser(
           name: event.name,
           phone: event.phone,
           password: event.password + "0000",
         );
-        print(user.user!.uid);
+        // print(user.user!.uid);
 
         add(StartAppEvent());
       }

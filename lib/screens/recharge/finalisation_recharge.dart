@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/account/account_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:pinput/pinput.dart';
 
-class ShareFinishScreen extends StatefulWidget {
-  const ShareFinishScreen({
+class FinalisationRecharge extends StatefulWidget {
+  const FinalisationRecharge({
     Key? key,
     required this.product,
     required this.receiver,
@@ -17,10 +16,10 @@ class ShareFinishScreen extends StatefulWidget {
   final String typeTrans;
 
   @override
-  State<ShareFinishScreen> createState() => _ShareFinishScreenState();
+  State<FinalisationRecharge> createState() => _FinalisationRechargeState();
 }
 
-class _ShareFinishScreenState extends State<ShareFinishScreen> {
+class _FinalisationRechargeState extends State<FinalisationRecharge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,23 +89,18 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 100,
+                  vertical: 20,
+                ),
+              ),
               onPressed: () {
-                if (widget.typeTrans == "Partager") {
-                  BlocProvider.of<AccountBloc>(context).add(
-                    ShareProductEvent(
-                      product: widget.product,
-                      destinateur: widget.receiver,
-                    ),
-                  );
-                } else {
-                  BlocProvider.of<AccountBloc>(context).add(
-                    WithdrawProductEvent(
-                      product: widget.product,
-                      destinateur: widget.receiver,
-                    ),
-                  );
-                }
+                BlocProvider.of<AccountBloc>(context).add(
+                  ShareProductEvent(
+                    product: widget.product,
+                    destinateur: widget.receiver,
+                  ),
+                );
               },
               child: const Text("Je confirme"),
             )
