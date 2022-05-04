@@ -27,8 +27,8 @@ class TransPage extends StatelessWidget {
                 padding: const EdgeInsets.only(
                   top: 16,
                   bottom: 120,
-                  right: 1.8,
-                  left: 1.8,
+                  right: 16,
+                  left: 16,
                 ),
                 itemBuilder: (context, int index) {
                   Trans trans = state.trans[index];

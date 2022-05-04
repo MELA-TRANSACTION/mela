@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 import 'package:mela/models/product.dart';
 import 'package:mela/models/user.dart';
+import 'package:uuid/uuid.dart';
 
 class TransClientService {
+  var uuid = Uuid();
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Stream<List<Product>> getBalance() {
@@ -99,8 +101,8 @@ class TransClientService {
     var productsReceiver = await getProducts(userReceiver.uid);
     Product? p1 =
         productsSender.firstWhere((element) => element.id == product.id);
-    Product? p2 =
-        productsReceiver.firstWhere((element) => element.id == product.id);
+    var p2 =
+        productsReceiver.where((element) => element.id == product.id).toList();
 
     await _firestore
         .collection("users")
@@ -111,12 +113,15 @@ class TransClientService {
       "quantity": p1.quantity - product.quantity,
     });
 
-    if (p2 == null) {
+    if (p2.isEmpty) {
+      var docId = uuid.v4().split("-").join("");
       await _firestore
           .collection("users")
           .doc(userReceiver.uid)
           .collection("trans")
-          .add(product.toJson());
+          .doc(docId)
+          .set(
+              {...product.toJson(), "id": docId, "createdAt": Timestamp.now()});
     } else {
       await _firestore
           .collection("users")
@@ -124,7 +129,7 @@ class TransClientService {
           .collection("product")
           .doc(product.id)
           .update({
-        "quantity": p2.quantity + product.quantity,
+        "quantity": p2[0].quantity + product.quantity,
       });
     }
   }

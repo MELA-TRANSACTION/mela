@@ -443,6 +443,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 label: Text("Mot de passe"),
                 prefixIcon: Icon(CupertinoIcons.lock),
               ),
+              //validator: (value) => value!.length < 4 ? " mmmmmmm" : null,
               style: const TextStyle(color: Colors.white),
               obscureText: true,
               keyboardType: TextInputType.number,

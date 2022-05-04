@@ -150,6 +150,7 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
                 },
               )
             },
+            //validator: (value) => value!.completeNumber.length < 10 ? "" : "",
             initialCountryCode: "CD",
             showCountryFlag: false,
             style: const TextStyle(
