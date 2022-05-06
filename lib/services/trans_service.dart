@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
 import 'package:mela/models/user.dart';
+import 'package:mela/services/client_trans.dart';
 
 class TransService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
@@ -81,5 +82,7 @@ class TransService {
       "typeTrans": transType,
       "createdAt": Timestamp.now(),
     });
+
+    TransClientService().addOrUpdateProduct(product, destinateur);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
+import 'package:mela/models/app_model.dart';
 
 enum AppScreen { login, register, welcome, distributor }
 
@@ -57,31 +58,55 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const SizedBox(
                   height: 80,
                 ),
-                Text(
-                  "Mela",
-                  style: GoogleFonts.comfortaa(
-                    fontSize: 70,
-                    color: Colors.amber,
+                CarouselSlider(
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.9,
+                    aspectRatio: 2.0,
+                    initialPage: 2,
+                    height: 500,
                   ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                SvgPicture.asset(
-                  "images/wine2.svg",
-                  height: 160,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  "Mon wallet pour la biere",
-                  style: GoogleFonts.comfortaa(
-                    fontSize: 20,
-                    color: Colors.blue[100],
-                  ),
-                ),
+                  items: appData.map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration:
+                              const BoxDecoration(color: Colors.transparent),
+                          child: Column(
+                            children: [
+                              Text(
+                                ' ${i.title}',
+                                style: const TextStyle(
+                                    fontSize: 44.0, color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              SvgPicture.asset(
+                                i.img,
+                                height: 220,
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Text(
+                                ' ${i.content}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 24.0,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                )
               ],
             ),
             const Spacer(),

@@ -42,7 +42,7 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
                     BlocProvider.of<AuthBloc>(context).add(Logout());
                   },
                   icon: const Icon(
-                    CupertinoIcons.bell,
+                    CupertinoIcons.rocket,
                   ),
                 ),
               ],
@@ -137,10 +137,10 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
             return ListView.builder(
               itemCount: state.trans.length,
               padding: const EdgeInsets.only(
-                top: 16,
+                top: 24,
                 bottom: 120,
-                right: 10,
-                left: 10,
+                right: 16,
+                left: 16,
               ),
               itemBuilder: (context, int index) {
                 Trans trans = state.trans[index];

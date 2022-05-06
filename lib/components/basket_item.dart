@@ -1,81 +1,56 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mela/models/product.dart';
 
-import '../../../size_config.dart';
-
-class IconBtnWithCounter extends StatelessWidget {
-  const IconBtnWithCounter({
+class BasketItem extends StatelessWidget {
+  const BasketItem({
+    required this.product,
+    required this.onTap,
     Key? key,
-    required this.svgSrc,
-    this.numOfitem = 0,
-    required this.press,
   }) : super(key: key);
 
-  final String svgSrc;
-  final int numOfitem;
-  final GestureTapCallback press;
+  final Product product;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: press,
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: getProportionateScreenWidth(16),
-          horizontal: 24,
-        ),
-        height: getProportionateScreenWidth(74),
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          color: Color(0xff21CE99),
-          // shape: BoxShape.circle,
-        ),
+        width: 120,
+        padding: const EdgeInsets.all(8),
         child: Row(
-          // clipBehavior: Clip.none,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      "$numOfitem",
-                      style: TextStyle(
-                        fontSize: getProportionateScreenWidth(32),
-                        height: 1,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                SvgPicture.asset(
-                  svgSrc,
-                  color: Colors.white,
-                ),
-              ],
+            SvgPicture.asset(
+              "images/wine.svg",
+              height: 64,
+              width: 44,
+              color: Colors.amber,
             ),
-            const Spacer(),
-            Row(
-              children: const [
-                Text(
-                  "Continuer ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-                Icon(
-                  CupertinoIcons.chevron_right,
-                  color: Colors.white,
-                )
-              ],
+            Text(
+              product.name,
+              style: const TextStyle(
+                color: Colors.amber,
+                fontSize: 24,
+              ),
+            ),
+            Text(
+              "${product.quantity.ceil()}",
+              style: const TextStyle(
+                color: Colors.amber,
+                fontSize: 24,
+              ),
             ),
           ],
+        ),
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.amber),
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

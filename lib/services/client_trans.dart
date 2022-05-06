@@ -118,7 +118,7 @@ class TransClientService {
       await _firestore
           .collection("users")
           .doc(userReceiver.uid)
-          .collection("trans")
+          .collection("products")
           .doc(docId)
           .set(
               {...product.toJson(), "id": docId, "createdAt": Timestamp.now()});

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/basket/basket_bloc.dart';
+import 'package:mela/components/basket_item.dart';
+import 'package:mela/components/quantity_input.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/screens/recharge/finalisation_recharge.dart';
 
@@ -52,95 +54,14 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
         ),
         children: [
           const SizedBox(
-            height: 56,
+            height: 16,
           ),
-          Row(
-            children: [
-              Text(
-                quantity.ceil().toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                ),
-              ),
-              SvgPicture.asset(
-                "images/wine.svg",
-                height: 24,
-                width: 22,
-                color: Colors.white,
-              ),
-              Text(
-                product.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (quantity < product.quantity) {
-                          quantity++;
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 72,
-                      height: 48,
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          CupertinoIcons.add,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (quantity <= 1) {
-                          quantity = 1;
-                        } else {
-                          quantity--;
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 72,
-                      height: 48,
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(8),
-                          bottomRight: Radius.circular(8),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          CupertinoIcons.minus,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          BasketItem(
+            product: product,
+            onTap: () {},
           ),
           const SizedBox(
-            height: 56,
+            height: 24,
           ),
           IntlPhoneField(
             onChanged: (v) => {
@@ -176,7 +97,15 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
             ),
           ),
           const SizedBox(
-            height: 24,
+            height: 0,
+          ),
+          QuantityInput(
+            onChanged: (value) {
+              setState(() {
+                quantity = int.parse(value!);
+              });
+            },
+            placeHolder: "Quantité",
           ),
           const SizedBox(
             height: 56,
@@ -247,10 +176,10 @@ class ProdBasketTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 60,
         width: 120,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               "images/wine.svg",
