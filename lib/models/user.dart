@@ -1,19 +1,22 @@
 class User {
+  String id;
   String uid;
   String name;
   String phone;
-  String role;
+  List<String> roles;
 
   User(
-      {required this.name,
-      required this.role,
+      {required this.id,
+      required this.name,
+      required this.roles,
       required this.phone,
       required this.uid});
 
   factory User.fromJson(var json) {
     return User(
+        id: json['id'],
         name: json['name'],
-        role: json['role'],
+        roles: List.from(json['roles']),
         phone: json['phone'],
         uid: json['uid']);
   }
@@ -23,7 +26,7 @@ class User {
       "uid": uid,
       "name": name,
       "phone": phone,
-      "role": role,
+      "roles": roles,
     };
   }
 }

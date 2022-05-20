@@ -1,88 +1,49 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
-
-import 'package:mela/models/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mela/models/trans.dart';
-import 'package:mela/models/user.dart';
-import 'package:mela/services/client_trans.dart';
+import 'package:mela/services/auth_service.dart';
+import 'package:mela_service/mela_service.dart';
 
 class TransService {
-  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  Future<List<Trans>> getTrans() async {
+    var user = await AuthService().me();
+    var result = await getMyTrans(user!.id);
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Stream<List<Trans>> getTrans() {
-    String uid = _auth.currentUser!.uid;
+    if (result.hasException) {
+      print(result.exception!.graphqlErrors);
+    }
 
-    var transSended = _firestore
-        .collection("users")
-        .doc(uid)
-        .collection("trans")
-        .orderBy("createdAt", descending: true)
-        .snapshots()
-        .map((event) => event.docs.map((e) {
-              print(e.data());
-              return Trans.fromJson(e.data());
-            }).toList());
+    var data = result.data!['myTrans'] as List;
 
-    return transSended;
+    return data.map((e) => Trans.fromJson(e)).toList();
   }
 
-  Future<User> getUser(phone) async {
-    final user = await _firestore
-        .collection("users")
-        .where("phone", isEqualTo: phone)
-        .get();
+  void recharge(Map<String, dynamic> data) async {
+    var result = await rechargeClient(data);
 
-    return User.fromJson(user.docs[0].data());
+    if (result.hasException) {
+      if (kDebugMode) {
+        print(result.exception!.graphqlErrors);
+      }
+    }
   }
 
-  Future<void> rechargerClient(
-    Product product,
-    String client,
-  ) async {
-    await addTrans(product, client, "Recharge", 0);
+  void withdrawFrom(Map<String, dynamic> data) async {
+    var result = await withdraw(data);
+
+    if (result.hasException) {
+      if (kDebugMode) {
+        print(result.exception!.graphqlErrors);
+      }
+    }
   }
 
-  Future<void> addTrans(
-      Product product, String destinateur, String transType, int cost) async {
-    var userSender = await getUser(_auth.currentUser!.email!.split("@")[0]);
-    var userReceiver = await getUser(destinateur);
+  void shareWith(Map<String, dynamic> data) async {
+    var result = await shareClient(data);
 
-    await _firestore
-        .collection("users")
-        .doc(userSender.uid)
-        .collection("trans")
-        .add({
-      "sender": userSender.toJson(),
-      "receiver": userReceiver.toJson(),
-      "product": product.toJson(),
-      "cost": cost,
-      "typeTrans": "sent-" + transType,
-      "createdAt": Timestamp.now(),
-    });
-
-    await _firestore
-        .collection("users")
-        .doc(userReceiver.uid)
-        .collection("trans")
-        .add({
-      "sender": userSender.toJson(),
-      "receiver": userReceiver.toJson(),
-      "product": product.toJson(),
-      "cost": cost,
-      "typeTrans": "received-" + transType,
-      "createdAt": Timestamp.now(),
-    });
-
-    await _firestore.collection("trans").add({
-      "sender": userSender.toJson(),
-      "receiver": userReceiver.toJson(),
-      "product": product.toJson(),
-      "cost": cost,
-      "typeTrans": transType,
-      "createdAt": Timestamp.now(),
-    });
-
-    TransClientService().addOrUpdateProduct(product, destinateur);
+    if (result.hasException) {
+      if (kDebugMode) {
+        print(result.exception!.graphqlErrors);
+      }
+    }
   }
 }

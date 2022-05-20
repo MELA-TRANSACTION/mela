@@ -2,26 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
-
 import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/basket/basket_bloc.dart';
-import 'package:mela/blocs/clients/clients_bloc.dart';
+
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
-import 'package:mela/blocs/product/product_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/basket.dart';
 import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/main_page.dart';
 import 'package:mela/screens/welcome_screen.dart';
-import 'package:mela/screens/pages/account_page.dart';
-
-import 'package:mela/services/api_service.dart';
 import 'package:mela/services/auth_service.dart';
-import 'package:mela/services/client_trans.dart';
-import 'package:mela/services/product_service.dart';
+import 'package:mela/services/distributor_services.dart';
+
 import 'package:mela/services/trans_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,28 +41,15 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) =>
-                AccountBloc(accountService: TransClientService())
-                  ..add(
-                    LoadAccountEvent(),
-                  ),
-          ),
-          BlocProvider(
             create: (context) => BasketBloc(Basket())
               ..add(
                 BasketStarted(),
               ),
           ),
           BlocProvider(
-            create: (context) => DistributorsBloc(ApiService())
+            create: (context) => DistributorsBloc(DistributorApi())
               ..add(
                 LoadDistributorsEvent(),
-              ),
-          ),
-          BlocProvider(
-            create: (context) => ProductBloc(ProductService())
-              ..add(
-                LoadProductEvent(),
               ),
           ),
           BlocProvider(
@@ -78,7 +58,6 @@ class MyApp extends StatelessWidget {
                 LoadTransEvent(),
               ),
           ),
-          BlocProvider(create: (context) => ClientsBloc(ApiService())),
         ],
         child: MaterialApp(
           title: 'Mela app for happy',
@@ -155,19 +134,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class Check {
-  static Future<bool?> checkUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    var b = prefs.getBool("isNewUser");
-
-    return b;
-  }
-
-  static setNewCheck() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.setBool("isNewUser", true);
   }
 }

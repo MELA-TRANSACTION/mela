@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
-import 'package:mela/blocs/product/product_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
-import 'package:mela/models/product.dart';
 import 'package:mela/models/trans.dart';
 import 'package:mela/screens/account_product_screen.dart';
 import 'package:mela/screens/recharge/list_product_screen.dart';
@@ -54,15 +51,15 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BlocBuilder<ProductBloc, ProductState>(
+                    BlocBuilder<TransBloc, TransState>(
                       builder: (context, state) {
-                        if (state is ProductLoadSuccess) {
+                        if (state is TransStateSuccess) {
                           return Row(
                             //crossAxisAlignment: CrossAxisAlignment.end,
                             // textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                "${calculateBalance(state.products)} ",
+                                "${calculateBalance(state.trans)} ",
                                 style: const TextStyle(
                                     fontSize: 32,
                                     color: Colors.white,
@@ -189,14 +186,16 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
     );
   }
 
-  int calculateBalance(List<Product> products) {
+  int calculateBalance(List<Trans> trans) {
     //print(">>>>>>${products[0].quantity}");
     double i = 0;
-    for (var t in products) {
-      i += t.quantity;
+    double n = 0;
+    for (var t in trans) {
+      i += t.quantityIn;
+      n += t.quantityOut;
     }
 
-    return i.ceil();
+    return (n - i).ceil();
   }
 
   String nFormatter(numb) {
@@ -230,7 +229,6 @@ class TransTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var uid = FirebaseAuth.instance.currentUser!.uid;
     return Card(
       //color: Color(0xff0c2359),
       shape: RoundedRectangleBorder(
@@ -252,7 +250,7 @@ class TransTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "${trans.products.quantity.ceil()} ",
+                  "${trans.product.quantity.ceil()} ",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 24,
@@ -268,7 +266,7 @@ class TransTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${trans.products.name} ",
+                  "${trans.product.name} ",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 16,
@@ -283,7 +281,7 @@ class TransTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  trans.sender!.name,
+                  trans.user.name,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 16,
@@ -296,24 +294,22 @@ class TransTile extends StatelessWidget {
                     style: TextStyle(fontSize: 14),
                   ),
                 ),
-                Text(
-                  trans.receiver!.name,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16,
-                  ),
-                ),
+                // Text(
+                //   trans.receiver!.name,
+                //   style: TextStyle(
+                //     color: Theme.of(context).primaryColor,
+                //     fontSize: 16,
+                //   ),
+                // ),
               ],
             ),
             const Spacer(),
-            Icon(
-              trans.sender!.uid != uid
-                  ? CupertinoIcons.arrow_turn_left_down
-                  : CupertinoIcons.arrow_turn_right_up,
-              color: trans.sender!.uid != uid
-                  ? const Color(0xff21ce99)
-                  : Colors.amber[800],
-            )
+            const Icon(
+
+                // ? CupertinoIcons.arrow_turn_left_down
+                CupertinoIcons.arrow_turn_right_up,
+                color: //trans.sender!.uid != uid
+                    Color(0xff21ce99))
           ],
         ),
       ),

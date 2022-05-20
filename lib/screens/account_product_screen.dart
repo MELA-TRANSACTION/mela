@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
-import 'package:mela/blocs/product/product_bloc.dart';
+import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/components/product_tile.dart';
-
 import 'package:mela/models/product.dart';
+import 'package:mela/models/trans.dart';
 
 class AccountProductScreen extends StatelessWidget {
   const AccountProductScreen({Key? key}) : super(key: key);
@@ -17,10 +15,10 @@ class AccountProductScreen extends StatelessWidget {
         title: const Text(""),
         actions: const [],
       ),
-      body: BlocBuilder<AccountBloc, AccountState>(
+      body: BlocBuilder<TransBloc, TransState>(
         builder: (context, state) {
-          if (state is AccountLoadSuccess) {
-            if (state.products.isEmpty) {
+          if (state is TransStateSuccess) {
+            if (state.trans.isEmpty) {
               return const Center(
                 child: Text("Balance vide"),
               );
@@ -32,15 +30,17 @@ class AccountProductScreen extends StatelessWidget {
                 top: 24,
                 bottom: 72,
               ),
-              itemCount: state.products.length,
+              itemCount: state.trans.length,
               itemBuilder: (context, index) {
+                var products = getProductFromTrans(state.trans);
+
                 return ProductTile(
-                  product: state.products[index],
+                  product: products[index],
                 );
               },
             );
           }
-          if (state is ProductLoadFailure) {
+          if (state is TransStateFailure) {
             return const Center(
               child: Text("Error"),
             );
@@ -52,5 +52,14 @@ class AccountProductScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  List<Product> getProductFromTrans(List<Trans> trans) {
+    List<Product> products = [];
+    for (var t in trans) {
+      products.add(t.product);
+    }
+
+    return products;
   }
 }

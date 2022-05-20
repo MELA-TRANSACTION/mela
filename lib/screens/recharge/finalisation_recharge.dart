@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
+import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:pinput/pinput.dart';
 
@@ -9,9 +9,11 @@ class FinalisationRecharge extends StatefulWidget {
     Key? key,
     required this.product,
     required this.receiver,
+    required this.quantity,
     required this.typeTrans,
   }) : super(key: key);
   final Product product;
+  final int quantity;
   final String receiver;
   final String typeTrans;
 
@@ -95,10 +97,11 @@ class _FinalisationRechargeState extends State<FinalisationRecharge> {
                 ),
               ),
               onPressed: () {
-                BlocProvider.of<AccountBloc>(context).add(
-                  ShareProductEvent(
+                BlocProvider.of<TransBloc>(context).add(
+                  AddShareEvent(
                     product: widget.product,
                     destinateur: widget.receiver,
+                    quantity: widget.quantity,
                   ),
                 );
               },

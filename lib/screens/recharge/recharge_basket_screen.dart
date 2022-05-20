@@ -118,9 +118,9 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => FinalisationRecharge(
-                          product:
-                              product.copyWith(quantity: quantity.toDouble()),
+                          product: product,
                           receiver: destinateur,
+                          quantity: quantity,
                           typeTrans: "Partager",
                         ),
                       ),

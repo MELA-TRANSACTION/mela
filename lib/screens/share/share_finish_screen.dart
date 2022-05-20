@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
+import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:pinput/pinput.dart';
 
@@ -11,8 +11,10 @@ class ShareFinishScreen extends StatefulWidget {
     required this.product,
     required this.receiver,
     required this.typeTrans,
+    required this.quantity,
   }) : super(key: key);
   final Product product;
+  final int quantity;
   final String receiver;
   final String typeTrans;
 
@@ -90,20 +92,24 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
+              ),
               onPressed: () {
                 if (widget.typeTrans == "Partager") {
-                  BlocProvider.of<AccountBloc>(context).add(
-                    ShareProductEvent(
+                  BlocProvider.of<TransBloc>(context).add(
+                    AddShareEvent(
                       product: widget.product,
                       destinateur: widget.receiver,
+                      quantity: widget.quantity,
                     ),
                   );
                 } else {
-                  BlocProvider.of<AccountBloc>(context).add(
-                    WithdrawProductEvent(
+                  BlocProvider.of<TransBloc>(context).add(
+                    AddWithdrawEvent(
                       product: widget.product,
                       destinateur: widget.receiver,
+                      quantity: widget.quantity,
                     ),
                   );
                 }

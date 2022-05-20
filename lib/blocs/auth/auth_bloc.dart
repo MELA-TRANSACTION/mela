@@ -28,13 +28,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (event is UpdateAuthState) {
         if (event.user != null) {
-          var user = await authService.isClient(event.user!.uid);
-
-          if (user.role == "client") {
-            emit(AuthSuccessClient(user));
-          }
-          if (user.role == "distributor") {
-            emit(AuthSuccessDistributor(user));
+          var user = await authService.me();
+          if (user == null) {
+            print("error");
+          } else {
+            print(user);
+            if (user.roles.contains("Client")) {
+              emit(AuthSuccessClient(user));
+            }
+            if (user.roles.contains("distributor")) {
+              emit(AuthSuccessDistributor(user));
+            }
           }
         } else {
           emit(UnAuthenticated());
@@ -45,7 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // await authService.signInWithGoogle();
 
         await authService.loginUser(
-            phone: event.phone, password: event.password + "0000");
+            phone: event.phone, password: event.password + "@mela");
 
         add(StartAppEvent());
       }
@@ -53,10 +57,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
         await authService.registerUser(
-          name: event.name,
-          phone: event.phone,
-          password: event.password + "0000",
-        );
+            name: event.name,
+            phone: event.phone,
+            password: event.password + "0000",
+            roles: ["Client"]);
         // print(user.user!.uid);
 
         add(StartAppEvent());

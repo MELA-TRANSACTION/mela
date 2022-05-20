@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mela/blocs/account/account_bloc.dart';
-import 'package:mela/blocs/product/product_bloc.dart';
+import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/screens/recharge/recharge_basket_screen.dart';
 
@@ -20,10 +19,10 @@ class _ListProductScreenState extends State<ListProductScreen> {
       appBar: AppBar(
         title: const Text("Mes produits"),
       ),
-      body: BlocBuilder<AccountBloc, AccountState>(
+      body: BlocBuilder<TransBloc, TransState>(
         builder: (context, state) {
-          if (state is AccountLoadSuccess) {
-            if (state.products.isEmpty) {
+          if (state is TransStateSuccess) {
+            if (state.trans.isEmpty) {
               return const Center(
                 child: Text("Pas des produits"),
               );
@@ -35,7 +34,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                   mainAxisSpacing: 16,
                   childAspectRatio: 7 / 9,
                 ),
-                itemCount: state.products.length,
+                itemCount: state.trans.length,
                 padding: const EdgeInsets.only(
                   right: 8,
                   left: 8,
@@ -43,7 +42,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                   bottom: 120,
                 ),
                 itemBuilder: (context, index) {
-                  Product product = state.products[index];
+                  Product product = state.trans[index].product;
                   return ProdBasketTile(
                     product: product,
                     onTap: () {
