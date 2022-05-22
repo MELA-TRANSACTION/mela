@@ -53,6 +53,8 @@ dependencies:
   uuid: 3.0.6
   mela_service:
     path: '../mela_service'
+  timeago: ^3.2.2
+  local_auth: ^2.1.0
 
 
 dev_dependencies:

@@ -1,7 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
+import 'package:mela/screens/distributorScreen.dart';
+import 'package:mela/services/api_service.dart';
 import 'package:pinput/pinput.dart';
 
 class FinalisationRecharge extends StatefulWidget {
@@ -30,86 +35,84 @@ class _FinalisationRechargeState extends State<FinalisationRecharge> {
         centerTitle: true,
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height * 0.48,
         width: MediaQuery.of(context).size.width,
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.white70,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "Voulez-vous ${widget.typeTrans} ",
-              style: const TextStyle(
-                fontSize: 28,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              " ${widget.product.quantity} ${widget.product.name} au pres de ",
-              style: const TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "${widget.receiver} ",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "Entrer votre pin",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.orange,
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Pinput(
-              onCompleted: (pin) => print(pin),
-              closeKeyboardWhenCompleted: true,
+            SvgPicture.asset(
+              "images/fingerprint.svg",
+              color: Colors.white,
+              height: 56,
             ),
             const SizedBox(
               height: 50,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 100,
-                  vertical: 20,
-                ),
+            const Text(
+              "Vous pouvez confirmer cette operation ",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.white,
               ),
-              onPressed: () {
-                BlocProvider.of<TransBloc>(context).add(
-                  AddShareEvent(
-                    product: widget.product,
-                    destinateur: widget.receiver,
-                    quantity: widget.quantity,
-                  ),
-                );
-              },
-              child: const Text("Je confirme"),
-            )
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            buildAuthenticate(context),
+            const SizedBox(
+              height: 50,
+            ),
           ],
         ),
       ),
     );
   }
+
+  Widget buildAuthenticate(BuildContext context) => buildButton(
+        text: 'Confirmer',
+        icon: Icons.lock_open,
+        onClicked: () async {
+          final isAvailable = await LocalAuthApi.hasBiometrics();
+          final biometrics = await LocalAuthApi.getBiometrics();
+
+          final hasFingerprint = biometrics.contains(BiometricType.fingerprint);
+
+          final isAuthenticated = await LocalAuthApi.authenticate();
+
+          if (isAuthenticated) {
+            BlocProvider.of<TransBloc>(context).add(
+              AddShareEvent(
+                product: widget.product.id,
+                destinateur: widget.receiver,
+                quantity: widget.quantity,
+              ),
+            );
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                  builder: (context) => const DistributorScreen()),
+            );
+          }
+        },
+      );
+
+  Widget buildButton({
+    required String text,
+    required IconData icon,
+    required VoidCallback onClicked,
+  }) =>
+      ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
+          padding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+        icon: Icon(icon, size: 26),
+        label: Text(
+          text,
+          style: const TextStyle(fontSize: 20),
+        ),
+        onPressed: onClicked,
+      );
 }

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
-import 'package:mela/blocs/basket/basket_bloc.dart';
 
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
-import 'package:mela/models/basket.dart';
+
 import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/main_page.dart';
 import 'package:mela/screens/welcome_screen.dart';
@@ -40,12 +39,6 @@ class MyApp extends StatelessWidget {
         ),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => BasketBloc(Basket())
-              ..add(
-                BasketStarted(),
-              ),
-          ),
           BlocProvider(
             create: (context) => DistributorsBloc(DistributorApi())
               ..add(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:mela/blocs/basket/basket_bloc.dart';
+
 import 'package:mela/components/basket_item.dart';
 import 'package:mela/components/quantity_input.dart';
 import 'package:mela/models/product.dart';
@@ -28,7 +28,7 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
   @override
   void initState() {
     product = widget.product;
-    quantity = widget.product.quantity.ceil();
+
     super.initState();
   }
 
@@ -110,50 +110,30 @@ class _RechargeBasketScreenState extends State<RechargeBasketScreen> {
           const SizedBox(
             height: 56,
           ),
-          BlocBuilder<BasketBloc, BasketState>(
-            builder: (context, state) {
-              if (state is BasketLoaded) {
-                return ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => FinalisationRecharge(
-                          product: product,
-                          receiver: destinateur,
-                          quantity: quantity,
-                          typeTrans: "Partager",
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Text("Recharger"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 0,
-                    ),
-                    primary: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                );
-              }
-              return ElevatedButton(
-                onPressed: () {},
-                child: const Text("Loading ..."),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 0,
-                  ),
-                  primary: Colors.blue[900],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => FinalisationRecharge(
+                    product: product,
+                    receiver: destinateur,
+                    quantity: quantity,
+                    typeTrans: "Recharger-client",
                   ),
                 ),
               );
             },
+            child: const Text("Recharger"),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
+                horizontal: 0,
+              ),
+              primary: Colors.blue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           )
         ],
       ),
@@ -194,7 +174,7 @@ class ProdBasketTile extends StatelessWidget {
               ),
             ),
             Text(
-              "${product.quantity.ceil()}",
+              "${product.quantity}",
               style: const TextStyle(
                 color: Colors.amber,
                 fontSize: 24,

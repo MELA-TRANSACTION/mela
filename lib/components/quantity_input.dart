@@ -23,6 +23,9 @@ class QuantityInput extends StatelessWidget {
         onTap: onTap,
         onChanged: onChanged,
         keyboardType: TextInputType.number,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
         decoration: InputDecoration(
           labelText: placeHolder ?? "Nom du produit",
           labelStyle: const TextStyle(

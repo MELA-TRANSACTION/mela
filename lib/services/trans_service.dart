@@ -6,7 +6,9 @@ import 'package:mela_service/mela_service.dart';
 class TransService {
   Future<List<Trans>> getTrans() async {
     var user = await AuthService().me();
-    var result = await getMyTrans(user!.id);
+    print(">>>>>>>>>>>>>>>>>>>>>" + user!.phone);
+
+    var result = await getMyTrans(user.id);
 
     if (result.hasException) {
       print(result.exception!.graphqlErrors);
@@ -14,10 +16,12 @@ class TransService {
 
     var data = result.data!['myTrans'] as List;
 
+    print(data);
+
     return data.map((e) => Trans.fromJson(e)).toList();
   }
 
-  void recharge(Map<String, dynamic> data) async {
+  Future recharge(Map<String, dynamic> data) async {
     var result = await rechargeClient(data);
 
     if (result.hasException) {
@@ -27,7 +31,7 @@ class TransService {
     }
   }
 
-  void withdrawFrom(Map<String, dynamic> data) async {
+  Future withdrawFrom(Map<String, dynamic> data) async {
     var result = await withdraw(data);
 
     if (result.hasException) {
@@ -37,7 +41,7 @@ class TransService {
     }
   }
 
-  void shareWith(Map<String, dynamic> data) async {
+  Future shareWith(Map<String, dynamic> data) async {
     var result = await shareClient(data);
 
     if (result.hasException) {

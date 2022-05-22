@@ -16,14 +16,14 @@ class Account {
 class Product {
   String id;
   String name;
-  double quantity;
+  int quantity;
   String format;
   double price;
 
   Product({
     required this.id,
     required this.name,
-    required this.quantity,
+    this.quantity = 0,
     required this.format,
     required this.price,
   });
@@ -33,7 +33,6 @@ class Product {
     return Product(
       id: json['id'].toString(),
       name: json['name'],
-      quantity: double.parse(json['quantity'].toString()),
       format: json['format'] ?? "",
       price: double.parse(json['price'].toString()),
     );
@@ -43,7 +42,6 @@ class Product {
     return {
       "id": id,
       "name": name,
-      "quantity": quantity,
       "format": format,
       "price": price,
     };
@@ -52,16 +50,16 @@ class Product {
   Product copyWith({
     String? id,
     String? name,
-    double? quantity,
     String? format,
     double? price,
+    int? quantity,
   }) {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,
-      quantity: quantity ?? this.quantity,
       format: format ?? this.format,
       price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
     );
   }
 }

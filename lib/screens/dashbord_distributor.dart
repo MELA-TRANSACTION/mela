@@ -7,6 +7,7 @@ import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/trans.dart';
 import 'package:mela/screens/account_product_screen.dart';
 import 'package:mela/screens/recharge/list_product_screen.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class DashboardDistributor extends StatefulWidget {
   const DashboardDistributor({Key? key}) : super(key: key);
@@ -102,20 +103,20 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
                         );
                       },
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (context) => const AccountProductScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "voir plus",
-                        style: TextStyle(color: Colors.amber),
-                      ),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     Navigator.of(context).push(
+                    //       MaterialPageRoute(
+                    //         fullscreenDialog: true,
+                    //         builder: (context) => const AccountProductScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: const Text(
+                    //     "voir plus",
+                    //     style: TextStyle(color: Colors.amber),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -188,14 +189,17 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
 
   int calculateBalance(List<Trans> trans) {
     //print(">>>>>>${products[0].quantity}");
-    double i = 0;
-    double n = 0;
+
+    int n = 0;
     for (var t in trans) {
-      i += t.quantityIn;
-      n += t.quantityOut;
+      if (t.status == "RECEIVE") {
+        n = n + t.quantityIn;
+      } else {
+        n = n - t.quantityOut;
+      }
     }
 
-    return (n - i).ceil();
+    return n;
   }
 
   String nFormatter(numb) {
@@ -229,6 +233,7 @@ class TransTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    timeago.setLocaleMessages('fr', timeago.FrMessages());
     return Card(
       //color: Color(0xff0c2359),
       shape: RoundedRectangleBorder(
@@ -240,78 +245,52 @@ class TransTile extends StatelessWidget {
       ),
 
       // padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Container(
-        height: 78,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: Row(
+      child: ListTile(
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "${trans.product.quantity.ceil()} ",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 24,
-                  ),
-                ),
-                SizedBox(
-                  width: 24,
-                  child: SvgPicture.asset(
-                    "images/wine.svg",
-                    height: 24,
-                    width: 22,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                Text(
-                  "${trans.product.name} ",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+            Text(
+              "${trans.quantityOut == 0 ? trans.quantityIn : trans.quantityOut} ",
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 24,
+              ),
             ),
-            const SizedBox(
-              width: 56,
+            SizedBox(
+              width: 24,
+              child: SvgPicture.asset(
+                "images/wine.svg",
+                height: 24,
+                width: 22,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  trans.user.name,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  child: Text(
-                    ' à ',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                // Text(
-                //   trans.receiver!.name,
-                //   style: TextStyle(
-                //     color: Theme.of(context).primaryColor,
-                //     fontSize: 16,
-                //   ),
-                // ),
-              ],
+            Text(
+              "${trans.product.name} ",
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
-            const Spacer(),
-            const Icon(
-
-                // ? CupertinoIcons.arrow_turn_left_down
-                CupertinoIcons.arrow_turn_right_up,
-                color: //trans.sender!.uid != uid
-                    Color(0xff21ce99))
           ],
         ),
+        subtitle: Text(
+          "${timeago.format(DateTime.fromMillisecondsSinceEpoch((trans.createdAt).ceil()), locale: 'fr')} ",
+          style: const TextStyle(color: Colors.grey),
+        ),
+        trailing: Text(
+          trans.status == "RECEIVE" ? "Recu" : "Envoyé",
+          style: TextStyle(
+            color: trans.status == "RECEIVE"
+                ? const Color(0xff21CE99)
+                : Colors.red,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        onTap: () {},
       ),
     );
   }

@@ -36,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             if (user.roles.contains("Client")) {
               emit(AuthSuccessClient(user));
             }
-            if (user.roles.contains("distributor")) {
+            if (user.roles.contains("Distributor")) {
               emit(AuthSuccessDistributor(user));
             }
           }

@@ -33,7 +33,7 @@ class ProductTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "${product.quantity.ceil()}",
+                    "${product.quantity} ",
                     style: TextStyle(color: Colors.amber[700], fontSize: 24),
                   ),
                   SizedBox(

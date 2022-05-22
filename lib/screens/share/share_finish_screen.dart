@@ -54,7 +54,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
               height: 10,
             ),
             Text(
-              " ${widget.product.quantity} ${widget.product.name} au pres de ",
+              "  ${widget.product.name} au pres de ",
               style: const TextStyle(
                 fontSize: 24,
                 color: Colors.white,
@@ -99,7 +99,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                 if (widget.typeTrans == "Partager") {
                   BlocProvider.of<TransBloc>(context).add(
                     AddShareEvent(
-                      product: widget.product,
+                      product: widget.product.name,
                       destinateur: widget.receiver,
                       quantity: widget.quantity,
                     ),
@@ -107,7 +107,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                 } else {
                   BlocProvider.of<TransBloc>(context).add(
                     AddWithdrawEvent(
-                      product: widget.product,
+                      product: widget.product.id,
                       destinateur: widget.receiver,
                       quantity: widget.quantity,
                     ),

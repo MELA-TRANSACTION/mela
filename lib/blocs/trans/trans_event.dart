@@ -33,7 +33,7 @@ class AddRechargeEvent extends TransEvent {
 }
 
 class AddWithdrawEvent extends TransEvent {
-  final Product product;
+  final String product;
   final String destinateur;
   final int quantity;
 
@@ -47,7 +47,7 @@ class AddWithdrawEvent extends TransEvent {
 }
 
 class AddShareEvent extends TransEvent {
-  final Product product;
+  final String product;
   final String destinateur;
   final int quantity;
 

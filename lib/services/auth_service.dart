@@ -23,8 +23,9 @@ class AuthService {
     var user = await firebaseAuth.signInWithEmailAndPassword(
         email: phone + "@mela.com", password: password);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString("mela-token", await user.user!.getIdToken());
+    final token = await user.user!.getIdToken();
+    print(token);
+    await prefs.setString("mela-token", token);
     return user;
   }
 

@@ -23,6 +23,7 @@ class AccountProductScreen extends StatelessWidget {
                 child: Text("Balance vide"),
               );
             }
+            var products = getProducts(state.trans);
             return ListView.builder(
               padding: const EdgeInsets.only(
                 left: 16,
@@ -30,10 +31,8 @@ class AccountProductScreen extends StatelessWidget {
                 top: 24,
                 bottom: 72,
               ),
-              itemCount: state.trans.length,
+              itemCount: products.length,
               itemBuilder: (context, index) {
-                var products = getProductFromTrans(state.trans);
-
                 return ProductTile(
                   product: products[index],
                 );
@@ -54,12 +53,17 @@ class AccountProductScreen extends StatelessWidget {
     );
   }
 
-  List<Product> getProductFromTrans(List<Trans> trans) {
-    List<Product> products = [];
-    for (var t in trans) {
-      products.add(t.product);
+  List<Product> getProducts(List<Trans> t) {
+    List<Product> p = [];
+    for (var n in t) {
+      if (n.status == "RECEIVE") {
+        p.add(
+          n.product.copyWith(
+            quantity: n.quantityOut == 0 ? n.quantityIn : n.quantityOut,
+          ),
+        );
+      }
     }
-
-    return products;
+    return p;
   }
 }

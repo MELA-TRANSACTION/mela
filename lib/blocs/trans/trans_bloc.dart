@@ -15,6 +15,7 @@ class TransBloc extends Bloc<TransEvent, TransState> {
   TransBloc(this.transService) : super(TransInitial()) {
     on<TransEvent>((event, emit) async {
       if (event is LoadTransEvent) {
+        emit(TransLoading());
         try {
           _subscription?.cancel();
           _subscription = transService.getTrans().asStream().listen(
@@ -30,12 +31,35 @@ class TransBloc extends Bloc<TransEvent, TransState> {
         emit(TransStateSuccess(event.trans));
       }
       if (event is AddRechargeEvent) {
-        transService.recharge({
+        emit(TransLoading());
+        await transService.recharge({
           "receiverId": event.destinateur,
           "productId": event.product,
           "quantity": event.quantity,
           "cost": 0,
         });
+        add(LoadTransEvent());
+      }
+
+      if (event is AddWithdrawEvent) {
+        emit(TransLoading());
+        await transService.withdrawFrom({
+          "receiverId": event.destinateur,
+          "productId": event.product,
+          "quantity": event.quantity,
+          "cost": 0,
+        });
+        add(LoadTransEvent());
+      }
+      if (event is AddShareEvent) {
+        emit(TransLoading());
+        await transService.shareWith({
+          "receiverId": event.destinateur,
+          "productId": event.product,
+          "quantity": event.quantity,
+          "cost": 0,
+        });
+        add(LoadTransEvent());
       }
     });
   }

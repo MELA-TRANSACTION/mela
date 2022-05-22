@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
+import 'package:mela/models/trans.dart';
 import 'package:mela/screens/recharge/recharge_basket_screen.dart';
 
 class ListProductScreen extends StatefulWidget {
@@ -27,34 +28,38 @@ class _ListProductScreenState extends State<ListProductScreen> {
                 child: Text("Pas des produits"),
               );
             }
+
+            var products = getProducts(state.trans);
             return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 7 / 9,
-                ),
-                itemCount: state.trans.length,
-                padding: const EdgeInsets.only(
-                  right: 8,
-                  left: 8,
-                  top: 16,
-                  bottom: 120,
-                ),
-                itemBuilder: (context, index) {
-                  Product product = state.trans[index].product;
-                  return ProdBasketTile(
-                    product: product,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RechargeBasketScreen(product: product),
-                        ),
-                      );
-                    },
-                  );
-                });
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 7 / 9,
+              ),
+              itemCount: products.length,
+              padding: const EdgeInsets.only(
+                right: 8,
+                left: 8,
+                top: 16,
+                bottom: 120,
+              ),
+              itemBuilder: (context, index) {
+                Product product = products[index];
+
+                return ProdBasketTile(
+                  product: product,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RechargeBasketScreen(product: product),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
           }
 
           return const Center(
@@ -63,6 +68,29 @@ class _ListProductScreenState extends State<ListProductScreen> {
         },
       ),
     );
+  }
+
+  List<Product> getProducts(List<Trans> t) {
+    List<Product> p = [];
+    var product;
+
+    for (var n in t) {
+      if (n.status == "SEND") {
+        product = n.product.copyWith(
+          quantity: n.quantityOut,
+        );
+        p.add(product);
+      }
+
+      if (n.status == "RECEIVE") {
+        product = n.product.copyWith(
+          quantity: n.quantityIn,
+        );
+        p.add(product);
+      }
+    }
+
+    return p;
   }
 }
 

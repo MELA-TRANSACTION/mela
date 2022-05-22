@@ -31,14 +31,14 @@ class BasketItem extends StatelessWidget {
               color: Colors.amber,
             ),
             Text(
-              product.name,
+              product.quantity.toString(),
               style: const TextStyle(
                 color: Colors.amber,
                 fontSize: 24,
               ),
             ),
             Text(
-              "${product.quantity.ceil()}",
+              "${product.name} ",
               style: const TextStyle(
                 color: Colors.amber,
                 fontSize: 24,

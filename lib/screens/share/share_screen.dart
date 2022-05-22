@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:mela/blocs/basket/basket_bloc.dart';
+
 import 'package:mela/models/product.dart';
 import 'package:mela/screens/share/share_finish_screen.dart';
 
@@ -30,7 +30,7 @@ class _ShareScreenState extends State<ShareScreen> {
   @override
   void initState() {
     product = widget.product;
-    quantity = widget.product.quantity.ceil();
+
     super.initState();
   }
 
@@ -159,11 +159,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        if (quantity < product.quantity) {
-                          quantity++;
-                        }
-                      });
+                      setState(() {});
                     },
                     child: Container(
                       width: 72,
@@ -267,95 +263,55 @@ class _ShareScreenState extends State<ShareScreen> {
             height: 56,
           ),
           currentScreen == ScreenAction.share
-              ? BlocBuilder<BasketBloc, BasketState>(
-                  builder: (context, state) {
-                    if (state is BasketLoaded) {
-                      return ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ShareFinishScreen(
-                                product: product,
-                                quantity: quantity,
-                                receiver: destinateur,
-                                typeTrans: "Partager",
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text("Partager"),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 0,
-                          ),
-                          primary: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                    return ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Loading ..."),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 0,
-                        ),
-                        primary: Colors.blue[900],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              ? ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ShareFinishScreen(
+                          product: product,
+                          quantity: quantity,
+                          receiver: destinateur,
+                          typeTrans: "Partager",
                         ),
                       ),
                     );
                   },
+                  child: const Text("Partager"),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 0,
+                    ),
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 )
-              : BlocBuilder<BasketBloc, BasketState>(
-                  builder: (context, state) {
-                    if (state is BasketLoaded) {
-                      return ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ShareFinishScreen(
-                                product: product,
-                                quantity: quantity,
-                                receiver: destinateur,
-                                typeTrans: "Retirer",
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text("Retirer"),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 0,
-                          ),
-                          primary: Colors.orange[900],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                    return ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Loading ..."),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 0,
-                        ),
-                        primary: Colors.orange[900],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              : ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ShareFinishScreen(
+                          product: product,
+                          quantity: quantity,
+                          receiver: destinateur,
+                          typeTrans: "Retirer",
                         ),
                       ),
                     );
                   },
+                  child: const Text("Retirer"),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 0,
+                    ),
+                    primary: Colors.orange[900],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 )
         ],
       ),
