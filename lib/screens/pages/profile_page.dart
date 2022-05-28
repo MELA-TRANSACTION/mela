@@ -10,8 +10,9 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: SizedBox(
+        body: Container(
           width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(children: [
             const CircleAvatar(
               radius: 56,
@@ -21,7 +22,7 @@ class ProfilePage extends StatelessWidget {
             ),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
-                if (state is AuthSuccessClient) {
+                if (state is AuthSuccess) {
                   var user = state.user;
                   return Column(
                     children: [

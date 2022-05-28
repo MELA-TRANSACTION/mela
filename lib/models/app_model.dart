@@ -10,14 +10,14 @@ List<AppModel> appData = [
   AppModel(
     title: "Partager",
     content:
-        "Faites-vous plaisir en envoyant gratuitement la boisson a vos proches partout ils peuvents etre.",
+        "Partageons le bonheur de la biere avec vos proches partout ils peuvents etre.",
     img: "images/celebration_beer.svg",
   ),
   AppModel(
     title: "Recharger",
     img: "images/undraw_beer.svg",
     content:
-        "Adapter votre consommation des boissons selon votre grain et agenda en faisant vos boissons en virtuels",
+        "Reserver meme pour demain, votre biere en le rechargeant dans un votre phone!",
   ),
   AppModel(
     title: "Retrait",

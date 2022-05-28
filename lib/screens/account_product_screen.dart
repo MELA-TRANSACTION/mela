@@ -59,7 +59,7 @@ class AccountProductScreen extends StatelessWidget {
       if (n.status == "RECEIVE") {
         p.add(
           n.product.copyWith(
-            quantity: n.quantityOut == 0 ? n.quantityIn : n.quantityOut,
+            quantity: n.quantity,
           ),
         );
       }

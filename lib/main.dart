@@ -9,20 +9,29 @@ import 'package:mela/blocs/trans/trans_bloc.dart';
 
 import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/main_page.dart';
+import 'package:mela/screens/onboard_screen.dart';
 import 'package:mela/screens/welcome_screen.dart';
 import 'package:mela/services/auth_service.dart';
 import 'package:mela/services/distributor_services.dart';
 
 import 'package:mela/services/trans_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  var showHome = sharedPreferences.getBool("showHome");
+
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp(isNew: showHome ?? false));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, required this.isNew}) : super(key: key);
+
+  final bool isNew;
 
   // This widget is the root of your application.
   @override
@@ -102,28 +111,33 @@ class MyApp extends StatelessWidget {
             ),
             brightness: Brightness.dark,
           ),
-          home: BlocBuilder<AuthBloc, AuthState>(
-            //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
-            builder: (context, state) {
-              if (state is UnAuthenticated) {
-                return const WelcomeScreen();
-              }
-              if (state is AuthSuccessClient) {
-                //print(state.user);
-                return const MainPage();
-              }
+          home: isNew
+              ? BlocBuilder<AuthBloc, AuthState>(
+                  //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
+                  builder: (context, state) {
+                    if (state is UnAuthenticated) {
+                      return const WelcomeScreen();
+                    }
+                    if (state is AuthSuccess) {
+                      //print(state.user);
+                      return state.user.roles.contains("client")? const MainPage():const DashboardDistributor();
+                    }
 
-              if (state is AuthSuccessDistributor) {
-                return const DashboardDistributor();
-              }
 
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-          ),
+
+
+
+                    return const Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                )
+              : const OnBoardingScreen(),
+          routes: {
+            "welcome": (context) => const WelcomeScreen(),
+          },
         ),
       ),
     );

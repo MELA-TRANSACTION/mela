@@ -39,9 +39,14 @@ class _ShareScreenState extends State<ShareScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Partager avec"),
-        leading: Icon(
-          CupertinoIcons.chevron_left,
-          color: Colors.blue[50],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            CupertinoIcons.chevron_left,
+            color: Colors.blue[50],
+          ),
         ),
       ),
       body: ListView(
@@ -102,7 +107,7 @@ class _ShareScreenState extends State<ShareScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: currentScreen == ScreenAction.withDraw
-                            ? Colors.orange[800]
+                            ? const Color(0xFF21CE99)
                             : Theme.of(context).primaryColor,
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(8),
@@ -159,7 +164,11 @@ class _ShareScreenState extends State<ShareScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      setState(() {});
+                      setState(() {
+                        if (quantity < 5) {
+                          quantity = quantity + 1;
+                        }
+                      });
                     },
                     child: Container(
                       width: 72,
@@ -265,16 +274,18 @@ class _ShareScreenState extends State<ShareScreen> {
           currentScreen == ScreenAction.share
               ? ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ShareFinishScreen(
-                          product: product,
-                          quantity: quantity,
-                          receiver: destinateur,
-                          typeTrans: "Partager",
+                    if (destinateur.length == 13) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ShareFinishScreen(
+                            product: product,
+                            quantity: quantity,
+                            receiver: destinateur,
+                            typeTrans: "Partager",
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   child: const Text("Partager"),
                   style: ElevatedButton.styleFrom(
@@ -290,16 +301,18 @@ class _ShareScreenState extends State<ShareScreen> {
                 )
               : ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ShareFinishScreen(
-                          product: product,
-                          quantity: quantity,
-                          receiver: destinateur,
-                          typeTrans: "Retirer",
+                    if (destinateur.length == 13) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ShareFinishScreen(
+                            product: product,
+                            quantity: quantity,
+                            receiver: destinateur,
+                            typeTrans: "Retirer",
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   child: const Text("Retirer"),
                   style: ElevatedButton.styleFrom(
@@ -307,7 +320,7 @@ class _ShareScreenState extends State<ShareScreen> {
                       vertical: 16,
                       horizontal: 0,
                     ),
-                    primary: Colors.orange[900],
+                    primary: const Color(0xff21CE99),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

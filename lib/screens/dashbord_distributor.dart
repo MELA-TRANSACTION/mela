@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/trans.dart';
-import 'package:mela/screens/account_product_screen.dart';
 import 'package:mela/screens/recharge/list_product_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -193,9 +192,7 @@ class _DashboardDistributorState extends State<DashboardDistributor> {
     int n = 0;
     for (var t in trans) {
       if (t.status == "RECEIVE") {
-        n = n + t.quantityIn;
-      } else {
-        n = n - t.quantityOut;
+        n = n + t.quantity;
       }
     }
 
@@ -251,7 +248,7 @@ class TransTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "${trans.quantityOut == 0 ? trans.quantityIn : trans.quantityOut} ",
+              "${trans.quantity} ",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 24,

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/models/product.dart';
-import 'package:pinput/pinput.dart';
+import 'package:mela/screens/main_page.dart';
+import 'package:mela/services/api_service.dart';
 
 class ShareFinishScreen extends StatefulWidget {
   const ShareFinishScreen({
@@ -73,20 +75,6 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Entrer votre pin",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.orange,
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Pinput(
-              onCompleted: (pin) => print(pin),
-              closeKeyboardWhenCompleted: true,
-            ),
             const SizedBox(
               height: 50,
             ),
@@ -95,25 +83,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
               ),
-              onPressed: () {
-                if (widget.typeTrans == "Partager") {
-                  BlocProvider.of<TransBloc>(context).add(
-                    AddShareEvent(
-                      product: widget.product.name,
-                      destinateur: widget.receiver,
-                      quantity: widget.quantity,
-                    ),
-                  );
-                } else {
-                  BlocProvider.of<TransBloc>(context).add(
-                    AddWithdrawEvent(
-                      product: widget.product.id,
-                      destinateur: widget.receiver,
-                      quantity: widget.quantity,
-                    ),
-                  );
-                }
-              },
+              onPressed: () {},
               child: const Text("Je confirme"),
             )
           ],
@@ -121,4 +91,58 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
       ),
     );
   }
+
+  Widget buildAuthenticate(BuildContext context) => buildButton(
+        text: 'Confirmer',
+        icon: Icons.lock_open,
+        onClicked: () async {
+          final isAvailable = await LocalAuthApi.hasBiometrics();
+          final biometrics = await LocalAuthApi.getBiometrics();
+
+          final hasFingerprint = biometrics.contains(BiometricType.fingerprint);
+
+          final isAuthenticated = await LocalAuthApi.authenticate();
+
+          if (isAuthenticated) {
+            if (widget.typeTrans == "Partager") {
+              BlocProvider.of<TransBloc>(context).add(
+                AddShareEvent(
+                  product: widget.product.name,
+                  destinateur: widget.receiver,
+                  quantity: widget.quantity,
+                ),
+              );
+            } else {
+              BlocProvider.of<TransBloc>(context).add(
+                AddWithdrawEvent(
+                  product: widget.product.id,
+                  destinateur: widget.receiver,
+                  quantity: widget.quantity,
+                ),
+              );
+            }
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const MainPage()),
+            );
+          }
+        },
+      );
+
+  Widget buildButton({
+    required String text,
+    required IconData icon,
+    required VoidCallback onClicked,
+  }) =>
+      ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
+          padding: const EdgeInsets.symmetric(vertical: 15),
+        ),
+        icon: Icon(icon, size: 26),
+        label: Text(
+          text,
+          style: const TextStyle(fontSize: 20),
+        ),
+        onPressed: onClicked,
+      );
 }

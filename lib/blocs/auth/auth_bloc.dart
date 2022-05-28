@@ -32,13 +32,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (user == null) {
             print("error");
           } else {
-            print(user);
-            if (user.roles.contains("Client")) {
-              emit(AuthSuccessClient(user));
-            }
-            if (user.roles.contains("Distributor")) {
-              emit(AuthSuccessDistributor(user));
-            }
+            print(user.balance);
+            emit(AuthSuccess(user));
           }
         } else {
           emit(UnAuthenticated());
@@ -59,9 +54,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authService.registerUser(
             name: event.name,
             phone: event.phone,
-            password: event.password + "0000",
-            roles: ["Client"]);
+            password: event.password,
+            roles: ["client"]);
         // print(user.user!.uid);
+
+        await authService.loginUser(
+          phone: event.phone,
+          password: event.password + "@mela",
+        );
 
         add(StartAppEvent());
       }

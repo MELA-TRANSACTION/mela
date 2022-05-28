@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
       body: PageView(
         children: const [
           AccountPage(),
-          GamePage(),
+          // GamePage(),
           TransPage(),
           ProfilePage(),
         ],
@@ -63,12 +63,12 @@ class _MainPageState extends State<MainPage> {
             ),
             label: "Account",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.game_controller,
-            ),
-            label: "Jeux",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     CupertinoIcons.game_controller,
+          //   ),
+          //   label: "Jeux",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.arrow_2_squarepath,

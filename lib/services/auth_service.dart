@@ -29,18 +29,19 @@ class AuthService {
     return user;
   }
 
-  Future<User> registerUser(
-      {required String phone,
-      required String password,
-      required String name,
-      required List<String> roles}) async {
+  Future<User> registerUser({
+    required String phone,
+    required String password,
+    required String name,
+    required List<String> roles,
+  }) async {
     final newUser = await createUser({
       "phone": phone,
       "name": name,
       "password": password,
       "roles": roles,
     });
-    return User.fromJson(newUser.data);
+    return User.fromJson(newUser.data!['createUser']);
   }
 
   Future<auth.UserCredential> signInWithGoogle() async {
@@ -70,7 +71,7 @@ class AuthService {
     print(uid);
     var result = await getUser(uid: uid);
     final data = result.data!['user'];
-    print(data);
+    //print(data);
     return User.fromJson(data);
   }
 }

@@ -7,15 +7,14 @@ class Trans {
   late Product product;
   late String status;
   late int cost;
-  late int quantityIn;
-  late int quantityOut;
+  late int quantity;
+
   late int createdAt;
 
   Trans({
     required this.id,
-    required this.quantityIn,
     required this.cost,
-    required this.quantityOut,
+    required this.quantity,
     required this.user,
     required this.createdAt,
     required this.status,
@@ -28,9 +27,9 @@ class Trans {
     cost = json['cost'];
     createdAt = json['createdAt'];
     status = json['status'];
-    quantityIn = json['quantityIn'] ?? 0;
-    quantityOut = json['quantityOut'] ?? 0;
-    user = User.fromJson(json['user']);
+    quantity = json['quantity'] ?? 0;
+
+    user = User.fromJson(json['owner']);
     //company = json['company']['uid'];
   }
 }

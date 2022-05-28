@@ -1,37 +1,28 @@
-class Account {
-  double balance;
-  double share;
-  List<Product> products;
-
-  Account({required this.share, required this.products, required this.balance});
-
-  factory Account.fromJson(var json) {
-    return Account(
-        share: json['share'],
-        products: json['products'],
-        balance: json['balance']);
-  }
-}
-
 class Product {
   String id;
   String name;
-  int quantity;
+  int? quantity;
   String format;
   double price;
+  String ref;
+  String typeTrans;
 
-  Product({
-    required this.id,
-    required this.name,
-    this.quantity = 0,
-    required this.format,
-    required this.price,
-  });
+  Product(
+      {required this.id,
+      required this.name,
+      this.quantity,
+      required this.format,
+      required this.price,
+      required this.ref,
+      required this.typeTrans});
 
   factory Product.fromJson(var json) {
-    print(json);
+    //print(json);
     return Product(
       id: json['id'].toString(),
+      ref: json['ref'] ?? "",
+      typeTrans: json['typeTrans'] ?? "",
+      quantity: json['quantity'],
       name: json['name'],
       format: json['format'] ?? "",
       price: double.parse(json['price'].toString()),
@@ -44,6 +35,8 @@ class Product {
       "name": name,
       "format": format,
       "price": price,
+      "quantity": quantity,
+      "ref": ref,
     };
   }
 
@@ -53,8 +46,12 @@ class Product {
     String? format,
     double? price,
     int? quantity,
+    String? typeTrans,
+    String? ref,
   }) {
     return Product(
+      typeTrans: typeTrans ?? this.typeTrans,
+      ref: ref ?? this.ref,
       id: id ?? this.id,
       name: name ?? this.name,
       format: format ?? this.format,
