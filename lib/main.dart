@@ -7,7 +7,6 @@ import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 
-import 'package:mela/screens/dashbord_distributor.dart';
 import 'package:mela/screens/main_page.dart';
 import 'package:mela/screens/onboard_screen.dart';
 import 'package:mela/screens/welcome_screen.dart';
@@ -68,8 +67,8 @@ class MyApp extends StatelessWidget {
             colorScheme: theme.colorScheme.copyWith(
               secondary: Colors.amber[800],
             ),
-            primaryColor: const Color(0xff0e2763),
-            scaffoldBackgroundColor: const Color(0xff0c2359),
+            primaryColor: Colors.white,
+            scaffoldBackgroundColor: Colors.blueGrey[100],
             inputDecorationTheme: InputDecorationTheme(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -96,50 +95,56 @@ class MyApp extends StatelessWidget {
               labelStyle: const TextStyle(color: Colors.white),
               prefixIconColor: Colors.white,
             ),
-            appBarTheme: const AppBarTheme(
+            appBarTheme: AppBarTheme(
               elevation: 0.9,
-              color: Color(0xff0e2763),
+              color: Colors.white,
               iconTheme: IconThemeData(
-                color: Colors.white,
+                color: Colors.blue.shade900,
               ),
               systemOverlayStyle: SystemUiOverlayStyle.light,
-              titleTextStyle: TextStyle(
-                color: Colors.white,
+              titleTextStyle: const TextStyle(
+                color: Colors.black,
                 fontSize: 21,
                 fontWeight: FontWeight.w600,
               ),
             ),
             brightness: Brightness.dark,
           ),
-          home: isNew
-              ? BlocBuilder<AuthBloc, AuthState>(
-                  //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
-                  builder: (context, state) {
-                    if (state is UnAuthenticated) {
-                      return const WelcomeScreen();
-                    }
-                    if (state is AuthSuccess) {
-                      //print(state.user);
-                      return state.user.roles.contains("client")? const MainPage():const DashboardDistributor();
-                    }
-
-
-
-
-
-                    return const Scaffold(
-                      body: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                )
-              : const OnBoardingScreen(),
+          home: isNew ? const RootScreen() : const OnBoardingScreen(),
           routes: {
             "welcome": (context) => const WelcomeScreen(),
           },
         ),
       ),
+    );
+  }
+}
+
+class RootScreen extends StatelessWidget {
+  const RootScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      //bloc: AuthBloc(authService: AuthService())..add(StartAppEvent()),
+      builder: (context, state) {
+        if (state is UnAuthenticated) {
+          return const WelcomeScreen();
+        }
+        if (state is AuthSuccess) {
+          //print(state.user);
+          return const MainPage();
+        }
+        if (state is AuthFailure) {
+          return const WelcomeScreen();
+        }
+
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }

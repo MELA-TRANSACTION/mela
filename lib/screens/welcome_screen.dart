@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
+import 'package:mela/main.dart';
 
 enum AppScreen { login, register }
 
@@ -247,11 +248,48 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                   );
                 }
+
+                if (state is AuthFailure) {
+                  return Column(
+                    children: [
+                      Text(
+                        "${state.authError.message} ",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            BlocProvider.of<AuthBloc>(context).add(
+                              Login(_phoneLogin, passwordLogin.text),
+                            );
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const RootScreen()));
+                          }
+                        },
+                        child: const Text("Try again"),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(50),
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
                 return ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       BlocProvider.of<AuthBloc>(context)
                           .add(Login(_phoneLogin, passwordLogin.text));
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RootScreen()));
                     }
                   },
                   child: const Text("Connexion"),
@@ -267,23 +305,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  appScreen = AppScreen.register;
-                });
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthFailure) {
+                  return Container();
+                }
+                return OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      appScreen = AppScreen.register;
+                    });
+                  },
+                  child: const Text(
+                    "Creer compte",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
               },
-              child: const Text(
-                "Creer compte",
-                style: TextStyle(color: Colors.black),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
             ),
           ],
         ),

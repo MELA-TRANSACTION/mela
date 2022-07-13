@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mela/screens/pages/account_page.dart';
-import 'package:mela/screens/pages/game_page.dart';
 import 'package:mela/screens/pages/profile_page.dart';
 import 'package:mela/screens/pages/trans_page.dart';
 
@@ -43,16 +42,19 @@ class _MainPageState extends State<MainPage> {
         children: const [
           AccountPage(),
           // GamePage(),
-          TransPage(),
-          ProfilePage(),
+          //TransPage(),
+          //ProfilePage(),
         ],
         controller: _controller,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      /*bottomNavigationBar: BottomNavigationBar(
         onTap: onNavTapped,
-        selectedItemColor: Theme.of(context).primaryColor,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700),
+        selectedItemColor: Colors.orange,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 18,
+        ),
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
         currentIndex: p,
@@ -82,7 +84,7 @@ class _MainPageState extends State<MainPage> {
             label: "Profile",
           ),
         ],
-      ),
+      ),*/
     );
   }
 }

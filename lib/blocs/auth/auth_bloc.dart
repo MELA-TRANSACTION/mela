@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:mela/models/auth_error.dart';
 import 'package:mela/models/user.dart';
 import 'package:mela/services/auth_service.dart';
 
@@ -30,9 +31,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (event.user != null) {
           var user = await authService.me();
           if (user == null) {
-            print("error");
+            //print("error");
           } else {
-            print(user.balance);
+            // print(user.balance);
             emit(AuthSuccess(user));
           }
         } else {
@@ -43,27 +44,50 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
 
-        await authService.loginUser(
+        var user = await authService.loginUser(
             phone: event.phone, password: event.password + "@mela");
 
-        add(StartAppEvent());
+        user.fold(
+          (l) {
+            var error = l;
+            return emit(AuthFailure(
+                AuthError(message: " ${error.message}", code: l.code)));
+          },
+          (r) => add(StartAppEvent()),
+        );
       }
       if (event is Register) {
         emit(AuthLoading());
         // await authService.signInWithGoogle();
-        await authService.registerUser(
+        var newUser = await authService.registerUser(
             name: event.name,
             phone: event.phone,
             password: event.password,
             roles: ["client"]);
         // print(user.user!.uid);
 
-        await authService.loginUser(
+        newUser.fold(
+          (l) {
+            var error = l;
+            return emit(AuthFailure(
+                AuthError(message: " ${error.message}", code: l.code)));
+          },
+          (r) => add(StartAppEvent()),
+        );
+
+        var user = await authService.loginUser(
           phone: event.phone,
           password: event.password + "@mela",
         );
 
-        add(StartAppEvent());
+        user.fold(
+          (l) {
+            var error = l;
+            return emit(AuthFailure(
+                AuthError(message: " ${error.message}", code: l.code)));
+          },
+          (r) => add(StartAppEvent()),
+        );
       }
       if (event is Logout) {
         emit(AuthLoading());

@@ -6,7 +6,7 @@ class User {
   late String name;
   late String phone;
   late List<String> roles;
-  List<Product>? balance;
+  late Money balance;
 
   User(
       {required this.id,
@@ -22,13 +22,7 @@ class User {
     roles = List.from(json['roles']);
     phone = json['phone'];
     uid = json['uid'];
-
-    if (json['balance'] != null) {
-      balance = <Product>[];
-      json['balance'].forEach((v) {
-        balance!.add(Product.fromJson(v));
-      });
-    }
+    balance = Money.fromJson(json['balance']);
   }
 
   Map<String, dynamic> toJson() {
@@ -38,5 +32,16 @@ class User {
       "phone": phone,
       "roles": roles,
     };
+  }
+}
+
+class Money {
+  num amount;
+  String currency;
+
+  Money({required this.currency, required this.amount});
+
+  factory Money.fromJson(var json) {
+    return Money(currency: json["currency"], amount: json['amount']);
   }
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mela/models/product.dart';
-import 'package:mela/models/trans.dart';
+import 'package:mela/models/trans_mela.dart';
 import 'package:mela/services/trans_service.dart';
 
 part 'trans_event.dart';

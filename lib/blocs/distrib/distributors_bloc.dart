@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mela/models/distributor.dart';
 import 'package:mela/services/distributor_services.dart';
 
@@ -21,7 +22,9 @@ class DistributorsBloc extends Bloc<DistributorsEvent, DistributorsState> {
                 (event) => add(UpdateDistributorsEvent(event)),
               );
         } catch (ex) {
-          print(ex);
+          if (kDebugMode) {
+            print(ex);
+          }
           emit(DistributorsFailure());
         }
       }

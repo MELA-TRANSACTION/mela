@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/local_auth.dart';
@@ -96,10 +95,10 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
         text: 'Confirmer',
         icon: Icons.lock_open,
         onClicked: () async {
-          final isAvailable = await LocalAuthApi.hasBiometrics();
+          await LocalAuthApi.hasBiometrics();
           final biometrics = await LocalAuthApi.getBiometrics();
 
-          final hasFingerprint = biometrics.contains(BiometricType.fingerprint);
+          biometrics.contains(BiometricType.fingerprint);
 
           final isAuthenticated = await LocalAuthApi.authenticate();
 

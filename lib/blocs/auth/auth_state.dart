@@ -22,4 +22,14 @@ class AuthSuccess extends AuthState {
   List<Object> get props => [user];
 }
 
+class AuthFailure extends AuthState {
+  final AuthError authError;
+  const AuthFailure(this.authError);
+  @override
+  List<Object> get props => [authError];
 
+  @override
+  String toString() {
+    return 'AuthFailure{authError: ${authError.code} ====${authError.message}}';
+  }
+}

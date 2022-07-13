@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
-import 'package:mela/models/trans.dart';
-import 'package:mela/screens/dashbord_distributor.dart';
+import 'package:mela/components/trans_tile.dart';
+import 'package:mela/models/trans_mela.dart';
 
 class TransPage extends StatelessWidget {
   const TransPage({Key? key}) : super(key: key);
@@ -19,7 +19,10 @@ class TransPage extends StatelessWidget {
           if (state is TransStateSuccess) {
             if (state.trans.isEmpty) {
               return const Center(
-                child: Text("aucun trans"),
+                child: Text(
+                  "aucun trans",
+                  style: TextStyle(color: Colors.white),
+                ),
               );
             }
             return ListView.builder(

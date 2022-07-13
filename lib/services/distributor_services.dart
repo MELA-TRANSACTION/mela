@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mela/models/distributor.dart';
 import 'package:mela_service/mela_service.dart';
 
@@ -6,10 +7,12 @@ class DistributorApi {
     var result = await getDistributors();
 
     if (result.hasException) {
-      print(result.exception!.graphqlErrors);
+      if (kDebugMode) {
+        print(result.exception!.graphqlErrors);
+      }
     }
 
-    var data = result.data!['myTrans'] as List;
+    var data = result.data!['users'] as List;
 
     return data.map((e) => Distributor.fromJson(e)).toList();
   }
