@@ -95,6 +95,17 @@ class MyApp extends StatelessWidget {
               labelStyle: const TextStyle(color: Colors.white),
               prefixIconColor: Colors.white,
             ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.orange[400],
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 48),
+              ),
+            ),
             appBarTheme: AppBarTheme(
               elevation: 0.9,
               color: Colors.white,

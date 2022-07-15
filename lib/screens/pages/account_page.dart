@@ -7,6 +7,7 @@ import 'package:mela/components/trans_tile.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans_mela.dart';
 import 'package:mela/screens/distributorScreen.dart';
+import 'package:mela/screens/pages/profile_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -49,7 +50,14 @@ class _AccountPageState extends State<AccountPage> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const ProfilePage(),
+                                    fullscreenDialog: true,
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 CupertinoIcons.person,
                               ),
