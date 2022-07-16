@@ -33,29 +33,26 @@ class AddRechargeEvent extends TransEvent {
 }
 
 class AddWithdrawEvent extends TransEvent {
-  final String product;
   final String destinateur;
-  final int quantity;
+  final num amount;
 
-  const AddWithdrawEvent(
-      {required this.product,
-      required this.quantity,
-      required this.destinateur});
+  const AddWithdrawEvent({required this.amount, required this.destinateur});
 
   @override
-  List<Object> get props => [product, destinateur, quantity];
+  List<Object> get props => [
+        amount,
+        destinateur,
+      ];
 }
 
 class AddShareEvent extends TransEvent {
-  final String product;
   final String destinateur;
-  final int quantity;
+  final num amount;
 
-  const AddShareEvent(
-      {required this.product,
-      required this.quantity,
-      required this.destinateur});
+  const AddShareEvent({required this.amount, required this.destinateur});
 
   @override
-  List<Object> get props => [product, destinateur, quantity];
+  List<Object> get props => [
+        destinateur,
+      ];
 }

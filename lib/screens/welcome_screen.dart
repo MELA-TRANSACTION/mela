@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mela/blocs/auth/auth_bloc.dart';
@@ -41,6 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget register() {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Form(
           key: formKey1,
@@ -52,15 +54,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               Column(
                 children: [
-                  Text(
-                    "Enregistrement",
-                    style: TextStyle(fontSize: 32, color: Colors.blue[50]),
+                  SvgPicture.asset(
+                    "images/logo_mela_svg.svg",
+                    height: 64,
                   ),
                   const Text(
-                    "Mela",
+                    "nouveau compte",
                     style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+                      fontSize: 13,
+                      color: Colors.grey,
                     ),
                   ),
                 ],
@@ -86,9 +88,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 initialCountryCode: 'CD',
                 showCountryFlag: false,
-                dropdownTextStyle: const TextStyle(color: Colors.white),
+                dropdownTextStyle: const TextStyle(color: Colors.black),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onChanged: (phone) {
                   setState(() {
@@ -102,7 +104,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   label: Text("Mot de passe"),
                   prefixIcon: Icon(CupertinoIcons.lock),
                 ),
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 controller: passwordRegister,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -133,18 +135,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             name.text, _phoneRegistre, passwordRegister.text));
                       }
                     },
-                    child: const Text("Creer compte"),
+                    child: const Text(
+                      "Creer un compte",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      elevation: 0,
                     ),
                   );
                 },
               ),
               const SizedBox(
-                height: 16,
+                height: 56,
               ),
               OutlinedButton(
                 onPressed: () {
@@ -153,7 +162,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   });
                 },
                 child: const Text(
-                  "Back",
+                  "Retour",
                   style: TextStyle(color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -174,6 +183,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget login() {
     return Scaffold(
       //appBar: AppBar(),
+      backgroundColor: Colors.white,
       body: Form(
         key: formKey,
         child: ListView(
@@ -183,22 +193,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 64,
             ),
             Column(
-              children: const [
-                Text(
-                  "Login",
-                  style: TextStyle(fontSize: 32, color: Colors.white),
-                ),
-                Text(
-                  "Mela",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white70,
-                  ),
+              children: [
+                SvgPicture.asset(
+                  "images/logo_mela_svg.svg",
+                  height: 54,
                 ),
               ],
             ),
             const SizedBox(
               height: 70,
+            ),
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "connexion",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
             ),
             const SizedBox(
               height: 16,
@@ -209,13 +223,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               initialCountryCode: 'CD',
               showCountryFlag: false,
-              dropdownTextStyle: const TextStyle(color: Colors.white),
+              dropdownTextStyle: TextStyle(color: Colors.grey[800]),
               onChanged: (phone) {
                 setState(() {
                   _phoneLogin = phone.completeNumber;
                 });
               },
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
             ),
             TextFormField(
               controller: passwordLogin,
@@ -224,12 +238,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 label: Text("Mot de passe"),
                 prefixIcon: Icon(CupertinoIcons.lock),
               ),
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
               obscureText: true,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(4),
               ],
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "Mot de passe oublié ?",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(
               height: 80,
@@ -292,7 +321,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           builder: (context) => const RootScreen()));
                     }
                   },
-                  child: const Text("Connexion"),
+                  child: const Text(
+                    "Connexion",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
@@ -303,22 +339,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               },
             ),
             const SizedBox(
-              height: 16,
+              height: 56,
             ),
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthFailure) {
                   return Container();
                 }
-                return OutlinedButton(
+                return TextButton(
                   onPressed: () {
                     setState(() {
                       appScreen = AppScreen.register;
                     });
                   },
                   child: const Text(
-                    "Creer compte",
-                    style: TextStyle(color: Colors.black),
+                    "Creer un compte",
+                    style: TextStyle(
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.white,

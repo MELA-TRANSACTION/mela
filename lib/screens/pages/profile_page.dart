@@ -70,7 +70,9 @@ class ProfilePage extends StatelessWidget {
               height: 48,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(Logout());
+              },
               child: const Text(
                 "Deconnexion",
                 style: TextStyle(

@@ -9,13 +9,12 @@ import 'package:mela/services/api_service.dart';
 class ShareFinishScreen extends StatefulWidget {
   const ShareFinishScreen({
     Key? key,
-    required this.product,
     required this.receiver,
     required this.typeTrans,
-    required this.quantity,
+    required this.amount,
   }) : super(key: key);
-  final Product product;
-  final int quantity;
+
+  final num amount;
   final String receiver;
   final String typeTrans;
 
@@ -27,6 +26,7 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Confirmation"),
         centerTitle: true,
@@ -38,27 +38,30 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.white70,
+            color: Colors.black,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           children: [
+            const SizedBox(
+              height: 48,
+            ),
             Text(
               "Voulez-vous ${widget.typeTrans} ",
               style: const TextStyle(
                 fontSize: 28,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              "  ${widget.product.name} au pres de ",
+              "  ${widget.amount.ceil()} CDF avec le ",
               style: const TextStyle(
                 fontSize: 24,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             const SizedBox(
@@ -67,24 +70,18 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
             Text(
               "${widget.receiver} ",
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 24,
               ),
             ),
             const SizedBox(
               height: 10,
             ),
+            const Spacer(),
+            buildAuthenticate(context),
             const SizedBox(
-              height: 50,
+              height: 10,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-              ),
-              onPressed: () {},
-              child: const Text("Je confirme"),
-            )
           ],
         ),
       ),
@@ -106,17 +103,15 @@ class _ShareFinishScreenState extends State<ShareFinishScreen> {
             if (widget.typeTrans == "Partager") {
               BlocProvider.of<TransBloc>(context).add(
                 AddShareEvent(
-                  product: widget.product.name,
                   destinateur: widget.receiver,
-                  quantity: widget.quantity,
+                  amount: widget.amount,
                 ),
               );
             } else {
               BlocProvider.of<TransBloc>(context).add(
                 AddWithdrawEvent(
-                  product: widget.product.id,
                   destinateur: widget.receiver,
-                  quantity: widget.quantity,
+                  amount: widget.amount,
                 ),
               );
             }

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mela/blocs/distrib/distributors_bloc.dart';
 import 'package:mela/models/distributor.dart';
 
 class DistributorScreen extends StatelessWidget {
@@ -16,7 +18,7 @@ class DistributorScreen extends StatelessWidget {
           IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.refresh))
         ],
       ),
-      /* body: BlocBuilder<DistributorsBloc, DistributorsState>(
+      body: BlocBuilder<DistributorsBloc, DistributorsState>(
         bloc: BlocProvider.of<DistributorsBloc>(context)
           ..add(LoadDistributorsEvent()),
         builder: (context, state) {
@@ -45,15 +47,6 @@ class DistributorScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         },
-      ),*/
-
-      body: const Center(
-        child: Text(
-          "Pas de distributeurs",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
       ),
     );
   }
@@ -76,7 +69,7 @@ class DistributorTile extends StatelessWidget {
       margin: const EdgeInsets.only(top: 0.7),
       child: ListTile(
         title: Text(
-          "${distributor.place} ",
+          "${distributor.name} ",
           style: const TextStyle(
             fontWeight: FontWeight.w600,
           ),

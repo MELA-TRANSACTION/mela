@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mela/blocs/auth/auth_bloc.dart';
 import 'package:mela/blocs/trans/trans_bloc.dart';
 import 'package:mela/components/trans_tile.dart';
 import 'package:mela/models/product.dart';
 import 'package:mela/models/trans_mela.dart';
 import 'package:mela/screens/distributorScreen.dart';
 import 'package:mela/screens/pages/profile_page.dart';
+import 'package:mela/screens/pages/qr_screen.dart';
+import 'package:mela/screens/share/share_screen.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -44,7 +47,14 @@ class _AccountPageState extends State<AccountPage> {
                         Row(
                           children: [
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const QrScreen(),
+                                    fullscreenDialog: true,
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 CupertinoIcons.qrcode,
                               ),
@@ -74,29 +84,19 @@ class _AccountPageState extends State<AccountPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Column(
-                            children: const [
-                              Text("Balance"),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "0 ",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "CDF",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                            children: [
+                              const Text("Balance"),
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  if (state is AuthSuccess) {
+                                    return balanceWidget(
+                                        state.user.balance.amount);
+                                  }
+
+                                  return const Center(
+                                    child: Text("En cours ..."),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -105,7 +105,7 @@ class _AccountPageState extends State<AccountPage> {
                           onPressed: () {},
                           icon: const Icon(
                               CupertinoIcons.arrow_down_right_arrow_up_left),
-                          label: Text("Echanger"),
+                          label: const Text("Echanger"),
                         )
                       ],
                     ),
@@ -158,7 +158,10 @@ class _AccountPageState extends State<AccountPage> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ShareScreen()));
+                    },
                     label: const Text(
                       "Partager ou payer",
                       style: TextStyle(
@@ -170,20 +173,51 @@ class _AccountPageState extends State<AccountPage> {
                       size: 48,
                     ),
                   ),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10)),
-                      height: 78,
-                      width: 78,
-                      child: const Center(
-                          child: Icon(
-                        CupertinoIcons.location_solid,
-                        size: 32,
-                        color: Colors.orange,
-                      )))
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const DistributorScreen()));
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10)),
+                        height: 78,
+                        width: 78,
+                        child: const Center(
+                            child: Icon(
+                          CupertinoIcons.location_solid,
+                          size: 32,
+                          color: Colors.orange,
+                        ))),
+                  )
                 ],
               ))
+        ],
+      ),
+    );
+  }
+
+  Widget balanceWidget(num value) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: "$value ",
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 32,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const TextSpan(
+            text: "CDF",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          )
         ],
       ),
     );

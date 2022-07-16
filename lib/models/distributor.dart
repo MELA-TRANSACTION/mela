@@ -1,12 +1,12 @@
 class Distributor {
-  String place;
+  List<String> roles;
   String address;
   String city;
   String name;
   String phone;
 
   Distributor({
-    required this.place,
+    required this.roles,
     required this.city,
     required this.address,
     required this.name,
@@ -15,7 +15,7 @@ class Distributor {
 
   factory Distributor.fromJson(var json) {
     return Distributor(
-        place: json['place'] ?? "Inconnue",
+        roles: List.from(json['roles']),
         name: json['name'] ?? "inconnue",
         address: json['address'] ?? "inconnue",
         city: json['city'] ?? "inconnue",

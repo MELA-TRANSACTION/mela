@@ -44,9 +44,8 @@ class TransBloc extends Bloc<TransEvent, TransState> {
       if (event is AddWithdrawEvent) {
         emit(TransLoading());
         await transService.withdrawFrom({
-          "receiverId": event.destinateur,
-          "productId": event.product,
-          "quantity": event.quantity,
+          "phoneReceiver": event.destinateur,
+          "amount": {"amount": event.amount, "currency": "CDF"},
           "cost": 0,
         });
         add(LoadTransEvent());
@@ -54,9 +53,8 @@ class TransBloc extends Bloc<TransEvent, TransState> {
       if (event is AddShareEvent) {
         emit(TransLoading());
         await transService.shareWith({
-          "receiverId": event.destinateur,
-          "productId": event.product,
-          "quantity": event.quantity,
+          "phoneReceiver": event.destinateur,
+          "amount": {"amount": event.amount, "currency": "CDF"},
           "cost": 0,
         });
         add(LoadTransEvent());

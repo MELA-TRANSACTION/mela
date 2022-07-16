@@ -91,9 +91,9 @@ class MyApp extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              hintStyle: const TextStyle(color: Colors.white70),
-              labelStyle: const TextStyle(color: Colors.white),
-              prefixIconColor: Colors.white,
+              hintStyle: TextStyle(color: Colors.grey[600]),
+              labelStyle: TextStyle(color: Colors.grey[800]),
+              prefixIconColor: Colors.black,
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
